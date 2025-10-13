@@ -1,0 +1,222 @@
+/* --- Global Styles & Variables --- */
+:root {
+    --primary-color: #4a47a3;
+    --secondary-color: #706fd3;
+    --background-color: #f4f7f9;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --header-text-color: #ffffff;
+    --accent-color: #2ecc71;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --font-family: 'Poppins', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.7;
+}
+
+/* --- Header & Footer --- */
+.app-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--header-text-color);
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    border-bottom: 5px solid var(--accent-color);
+}
+
+.app-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+.company-name {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.app-footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.app-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.app-footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- Main Content & Container --- */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Accordion (The Playbook) --- */
+.accordion-item {
+    background-color: var(--card-background);
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px var(--shadow-color);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.accordion-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    background-color: var(--card-background);
+    border-left: 5px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.accordion-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.accordion-header .icon {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    transition: transform 0.3s ease;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    transition: max-height 0.4s ease-in-out, padding 0.3s ease;
+    border-top: 1px solid #eee;
+}
+
+.accordion-content-inner {
+    padding: 1.5rem 0;
+}
+
+/* Active State for Accordion */
+.accordion-item.active .accordion-header {
+    border-left-color: var(--accent-color);
+}
+
+.accordion-item.active .accordion-header .icon {
+    transform: rotate(180deg);
+}
+
+/* --- Content Styling Inside Accordion --- */
+.accordion-content p, .accordion-content ol {
+    margin-bottom: 1rem;
+}
+
+.accordion-content a {
+    color: var(--secondary-color);
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.accordion-content a:hover {
+    text-decoration: underline;
+}
+
+.accordion-content ol {
+    list-style-position: inside;
+    padding-left: 0.5rem;
+}
+
+.accordion-content li {
+    margin-bottom: 0.75rem;
+}
+
+.accordion-content strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.accordion-content em {
+    font-style: italic;
+}
+
+.accordion-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+/* --- Copy Button --- */
+.copy-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1rem;
+}
+
+.copy-button:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+.copy-button.copied {
+    background-color: var(--secondary-color);
+}
+
+/* --- Loader --- */
+.loader {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+/* --- Responsiveness for Mobile Devices --- */
+@media (max-width: 768px) {
+    .app-header h1 {
+        font-size: 2rem;
+    }
+    
+    .container {
+        margin: 1.5rem auto;
+    }
+
+    .accordion-header h2 {
+        font-size: 1.1rem;
+    }
+}

@@ -220,3 +220,28 @@ body {
         font-size: 1.1rem;
     }
 }
+
+
+/* --- Video Hub Link/Button --- */
+.video-hub-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; /* This creates a nice space between the icon and the text */
+    background: linear-gradient(135deg, var(--accent-color), #27ae60); /* Using the vibrant green */
+    color: var(--header-text-color);
+    padding: 1rem 1.5rem;
+    border-radius: 50px; /* This creates the modern pill shape */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem; /* Adds space between the button and the first guide */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-hub-link:hover {
+    transform: translateY(-3px); /* Lifts the button slightly when hovered */
+    box-shadow: 0 7px 20px rgba(46, 204, 113, 0.3); /* Adds a more pronounced, colored glow */
+}

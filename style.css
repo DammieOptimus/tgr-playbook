@@ -1,13 +1,16 @@
-/* --- Global Styles & Variables --- */
+/* --- Global Styles & Variables (TGR Brand Dark Theme) --- */
 :root {
-    --primary-color: #4a47a3;
-    --secondary-color: #706fd3;
-    --background-color: #f4f7f9;
-    --card-background: #ffffff;
-    --text-color: #333;
+    --primary-color: #0077B3;      /* TGR Deep Blue */
+    --secondary-color: #0099DD;    /* TGR Blue */
+    --accent-color: #D92E1A;       /* TGR Red */
+    --highlight-color: #ADD8E6;   /* TGR Light Blue */
+    
+    /* Dark Mode Neutrals */
+    --background-color: #222831;   /* Dark Charcoal Blue */
+    --card-background: #393E46;    /* Lighter Dark Gray */
+    --text-color: #EEEEEE;         /* Off-white Text */
     --header-text-color: #ffffff;
-    --accent-color: #2ecc71;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.2);
     --font-family: 'Poppins', sans-serif;
 }
 
@@ -51,11 +54,11 @@ body {
     text-align: center;
     padding: 1.5rem;
     font-size: 0.9rem;
-    color: #777;
+    color: #AAAAAA; /* Lighter gray for readability on dark background */
 }
 
 .app-footer a {
-    color: var(--primary-color);
+    color: var(--secondary-color); /* Brighter TGR Blue for better contrast */
     text-decoration: none;
     font-weight: 600;
 }
@@ -71,6 +74,30 @@ body {
     padding: 0 1rem;
 }
 
+/* --- Video Hub Link/Button --- */
+.video-hub-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #E74C3C, var(--accent-color));
+    color: var(--header-text-color);
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-hub-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(217, 46, 26, 0.3);
+}
+
 /* --- Accordion (The Playbook) --- */
 .accordion-item {
     background-color: var(--card-background);
@@ -83,7 +110,7 @@ body {
 
 .accordion-item:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 .accordion-header {
@@ -101,7 +128,7 @@ body {
 .accordion-header h2 {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--secondary-color); /* Using brighter TGR Blue for better contrast */
 }
 
 .accordion-header .icon {
@@ -115,7 +142,7 @@ body {
     overflow: hidden;
     padding: 0 1.5rem;
     transition: max-height 0.4s ease-in-out, padding 0.3s ease;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #4a505a; /* Darker border for dark mode */
 }
 
 .accordion-content-inner {
@@ -129,6 +156,27 @@ body {
 
 .accordion-item.active .accordion-header .icon {
     transform: rotate(180deg);
+}
+
+/* --- Accordion Number Styling --- */
+.accordion-number {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background-color: var(--highlight-color);
+    color: #333333; /* Dark text for readability on light blue circle */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.accordion-item.active .accordion-number {
+    background-color: var(--accent-color);
+    color: var(--header-text-color);
 }
 
 /* --- Content Styling Inside Accordion --- */
@@ -170,7 +218,7 @@ body {
     font-weight: 600;
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 /* --- Copy Button --- */
@@ -191,7 +239,7 @@ body {
 }
 
 .copy-button:hover {
-    background-color: #27ae60;
+    background-color: #B82414; /* Darker TGR Red */
     transform: scale(1.05);
 }
 
@@ -220,50 +268,4 @@ body {
     .accordion-header h2 {
         font-size: 1.1rem;
     }
-}
-
-
-/* --- Video Hub Link/Button --- */
-.video-hub-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem; /* This creates a nice space between the icon and the text */
-    background: linear-gradient(135deg, var(--accent-color), #27ae60); /* Using the vibrant green */
-    color: var(--header-text-color);
-    padding: 1rem 1.5rem;
-    border-radius: 50px; /* This creates the modern pill shape */
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 2rem; /* Adds space between the button and the first guide */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.video-hub-link:hover {
-    transform: translateY(-3px); /* Lifts the button slightly when hovered */
-    box-shadow: 0 7px 20px rgba(46, 204, 113, 0.3); /* Adds a more pronounced, colored glow */
-}
-
-/* --- Accordion Number Styling --- */
-.accordion-number {
-    flex-shrink: 0; /* Prevents the circle from shrinking if the title is long */
-    width: 36px;
-    height: 36px;
-    background-color: var(--secondary-color);
-    color: var(--header-text-color);
-    border-radius: 50%; /* This makes it a perfect circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-}
-
-/* Style for the number when the accordion is active/open */
-.accordion-item.active .accordion-number {
-    background-color: var(--accent-color); /* Changes to green when open */
 }

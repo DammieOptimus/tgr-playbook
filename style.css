@@ -90,6 +90,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1.5rem;
     padding: 1.25rem 1.5rem;
     cursor: pointer;
     background-color: var(--card-background);
@@ -244,4 +245,25 @@ body {
 .video-hub-link:hover {
     transform: translateY(-3px); /* Lifts the button slightly when hovered */
     box-shadow: 0 7px 20px rgba(46, 204, 113, 0.3); /* Adds a more pronounced, colored glow */
+}
+
+/* --- Accordion Number Styling --- */
+.accordion-number {
+    flex-shrink: 0; /* Prevents the circle from shrinking if the title is long */
+    width: 36px;
+    height: 36px;
+    background-color: var(--secondary-color);
+    color: var(--header-text-color);
+    border-radius: 50%; /* This makes it a perfect circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Style for the number when the accordion is active/open */
+.accordion-item.active .accordion-number {
+    background-color: var(--accent-color); /* Changes to green when open */
 }

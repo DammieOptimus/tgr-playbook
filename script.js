@@ -37,6 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const instructions = await response.json();
 
+            // --- START: Dynamic Referral ID Replacement ---
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const refId = urlParams.get('refid'); // Look for ?refid=... in the URL
+
+            // If a referral ID is found in the URL, replace the placeholder
+            if (refId) {
+                instructions.forEach(item => {
+                    // Using a regular expression with a 'g' flag to replace all instances
+                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, refId);
+                });
+            } else {
+                // If no refid, replace with the default generic text
+                instructions.forEach(item => {
+                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, 'TYPE-YOUR-REFERRAL-ID-HERE');
+                });
+            }
+            // --- END: Dynamic Referral ID Replacement ---
+
             // Clear the "Loading..." message
             accordionContainer.innerHTML = '';
 

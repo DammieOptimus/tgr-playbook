@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 itemElement.innerHTML = `
                     <div class="accordion-header">
+                        <div class="accordion-number">${index + 1}</div>
                         <h2>${item.title}</h2>
                         <i class="icon fas fa-chevron-down"></i>
                     </div>

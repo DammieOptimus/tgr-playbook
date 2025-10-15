@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Function 2: Convert WhatsApp formatting to HTML for display ---
     // This makes the text look good inside the app.
     const formatContentForDisplay = (content) => {
+        // Regex to specifically find YouTube links (youtube.com or youtu.be)
+        const youtubeRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[^\s<]+)/g;
+
+        // Regex to find other links (that are NOT YouTube links)
+        const otherLinkRegex = /(https?:\/\/(?!.*youtube\.com|.*youtu\.be)[^\s<]+)/g;
+
         return content
             // Bold and Italic: _*...*_ -> <h3>...</h3>
             .replace(/_\*(.*?)\*_/g, '<h3>$1</h3>')
@@ -21,8 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
             // Italic: _..._ -> <em>...</em>
             .replace(/_(.*?)_/g, '<em>$1</em>')
-            // Links: Make any http link clickable
-            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
+            // First, process and style YouTube links
+            .replace(youtubeRegex, '<a href="$1" target="_blank" class="youtube-link"><i class="fab fa-youtube"></i> Watch Training Video <i class="fas fa-external-link-alt"></i></a>')
+            // Then, process any other links normally
+            .replace(otherLinkRegex, '<a href="$1" target="_blank">$1</a>')
             // Line breaks: \n -> <br>
             .replace(/\n/g, '<br>');
     };

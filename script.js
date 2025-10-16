@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Line breaks: \n -> <br>
             .replace(/\n/g, '<br>');
     };
-    
+
     // --- Function 3: Fetch and display instructions ---
     const loadInstructions = async () => {
         try {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // The formatted content for display inside the app
                 const displayContent = formatContentForDisplay(item.content);
-                
+
                 itemElement.innerHTML = `
                     <div class="accordion-header">
                         <div class="accordion-number">${index + 1}</div>
@@ -91,23 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-                
+
                 accordionContainer.appendChild(itemElement);
 
                 // Add event listener for the copy button
                 const copyButton = itemElement.querySelector('.copy-button');
                 copyButton.addEventListener('click', (e) => {
                     e.stopPropagation(); // Prevents the accordion from closing when button is clicked
-                    
+
                     // The original, unformatted text for WhatsApp
                     const originalContent = instructions[index].content;
-                    
+
                     navigator.clipboard.writeText(originalContent).then(() => {
                         // Provide visual feedback to the user
                         const buttonText = copyButton.querySelector('span');
                         buttonText.textContent = 'Copied!';
                         copyButton.classList.add('copied');
-                        
+
                         setTimeout(() => {
                             buttonText.textContent = 'Copy for WhatsApp';
                             copyButton.classList.remove('copied');
@@ -126,17 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const header = e.target.closest('.accordion-header');
         if (header) {
             const item = header.parentElement;
-            
+
             // If the item is already active, we don't want to close others
             const isAlreadyActive = item.classList.contains('active');
 
             // Optional: Close all other items for a cleaner interface
             document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
-            
+
             if (!isAlreadyActive) {
                 item.classList.add('active');
             }
-            
+
             // Adjust max-height for smooth animation
             document.querySelectorAll('.accordion-content').forEach(content => {
                 if (content.parentElement.classList.contains('active')) {
@@ -148,7 +148,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Function 5: Animate the main video hub button text ---
+    const setupRotatingButtonText = () => {
+        const buttonTextSpan = document.querySelector('.video-hub-link span');
+
+        // Safety check: if the button doesn't exist, do nothing.
+        if (!buttonTextSpan) {
+            return;
+        }
+
+        const texts = [
+            "Explore the TGR Video Training Hub",
+            "Click to See More TGR Videos",
+            "Watch More TGR Videos",
+            "Click to Learn More"
+        ];
+        let currentIndex = 0;
+
+        // Set an interval to run the code every 10 seconds (10000 milliseconds)
+        setInterval(() => {
+            // 1. Fade the text out
+            buttonTextSpan.style.opacity = '0';
+
+            // 2. Wait for the fade-out transition to finish (500ms)
+            setTimeout(() => {
+                // 3. Change the index to the next text in the array
+                currentIndex = (currentIndex + 1) % texts.length;
+
+                // 4. Update the text content
+                buttonTextSpan.textContent = texts[currentIndex];
+
+                // 5. Fade the new text back in
+                buttonTextSpan.style.opacity = '1';
+            }, 500); // This delay must match the CSS transition duration
+
+        }, 10000); // 10-second interval
+    };
+
     // --- Initial calls to run the app ---
     updateYear();
     loadInstructions();
+    setupRotatingButtonText();
 });

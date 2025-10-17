@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Function 2: Convert WhatsApp formatting to HTML for display ---
     // This makes the text look good inside the app.
     const formatContentForDisplay = (content) => {
-        // Regex to specifically find YouTube links (youtube.com or youtu.be)
-        const youtubeRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)[^\s<]+)/g;
+        // Regex to find YouTube links, including standard, shorts, and youtu.be formats
+        const youtubeRegex = /(https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)[^\s<]+)/g;
 
         // Regex to find other links (that are NOT YouTube links)
-        const otherLinkRegex = /(https?:\/\/(?!.*youtube\.com|.*youtu\.be)[^\s<]+)/g;
+        const otherLinkRegex = /(https?:\/\/(?!.*(?:youtube\.com|youtu\.be))[^\s<]+)/g;
 
         return content
             // Bold and Italic: _*...*_ -> <h3>...</h3>

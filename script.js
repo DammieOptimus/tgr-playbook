@@ -185,8 +185,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 10000); // 10-second interval
     };
 
+    // --- Function 6: Handle "Back to Top" button ---
+    const setupBackToTopButton = () => {
+        const backToTopBtn = document.getElementById('back-to-top-btn');
+
+        if (!backToTopBtn) return;
+
+        // Show or hide the button based on scroll position
+        window.addEventListener('scroll', () => {
+            // Show the button if user has scrolled down more than 300px
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        // Scroll to the top when the button is clicked
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // For a smooth scrolling animation
+            });
+        });
+    };
+
     // --- Initial calls to run the app ---
     updateYear();
     loadInstructions();
     setupRotatingButtonText();
+    setupBackToTopButton();
 });

@@ -342,3 +342,57 @@ body {
     background-color: #B82414; /* Darker TGR Red */
     transform: scale(1.1);
 }
+
+
+/* --- Scrolling Marquee Bar Styling --- */
+#marquee-container {
+    margin-bottom: 1.5rem;
+}
+
+.marquee-bar {
+    background-color: #2c313a;
+    border-radius: 8px;
+    overflow: hidden; /* Essential: This is our viewport */
+    white-space: nowrap;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    display: flex; /* Use flexbox for alignment */
+}
+
+.marquee-content {
+    display: flex;
+    flex-shrink: 0;
+    /* We've broken the 'animation' property into individual parts */
+    animation-name: scroll-left;
+    animation-duration: 30s; /* This now acts as a default/fallback */
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+.marquee-bar:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+.marquee-content-block {
+    padding: 0.75rem 2rem; /* Add padding here instead of the parent */
+}
+
+/* The seamless scrolling animation */
+@keyframes scroll-left {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%); /* Moves exactly one block's width */
+    }
+}
+
+/* Styling for links inside the marquee */
+.marquee-link {
+    color: var(--highlight-color) !important;
+    text-decoration: underline;
+    font-weight: 600;
+    padding: 0 0.25rem;
+}
+
+.marquee-link:hover {
+    color: #ffffff !important;
+}

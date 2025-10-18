@@ -43,7 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const instructions = await response.json();
+            const data = await response.json();
+
+            const instructions = data.instructions;
+
+            // Run the new function to set up the scrolling notice
+            setupScrollingNotice(data.scrolling_notice);
 
             // --- START: Dynamic Referral ID Replacement ---
             // Get URL parameters
@@ -209,6 +214,62 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
+
+
+    // --- Function 7: Setup the scrolling notice bar ---
+    const setupScrollingNotice = (noticeData) => {
+    // If the feature is disabled or data is missing, do nothing.
+    if (!noticeData || !noticeData.enabled) {
+        return;
+    }
+
+    const marqueeContainer = document.getElementById('marquee-container');
+    let content = noticeData.content;
+
+    // Find and replace [tel:...] placeholders
+    content = content.replace(/\[tel:([\d\s+-]+)\]/g, '<a href="tel:$1" class="marquee-link tel-link">$1</a>');
+
+    // Find and replace [link:...|...] placeholders
+    content = content.replace(/\[link:(.*?)\|(.*?)\]/g, '<a href="$1" target="_blank" class="marquee-link web-link">$2</a>');
+
+    // Create the main marquee bar
+    const marqueeBar = document.createElement('div');
+    marqueeBar.className = 'marquee-bar';
+
+    // Create the inner content wrapper that will be animated
+    const marqueeContent = document.createElement('div');
+    marqueeContent.className = 'marquee-content';
+
+    // Create TWO identical blocks of content for the seamless loop
+    const contentBlock1 = document.createElement('div');
+    contentBlock1.className = 'marquee-content-block';
+    contentBlock1.innerHTML = content;
+
+    const contentBlock2 = document.createElement('div');
+    contentBlock2.className = 'marquee-content-block';
+    contentBlock2.innerHTML = content;
+
+    marqueeContent.appendChild(contentBlock1);
+    marqueeContent.appendChild(contentBlock2);
+    marqueeBar.appendChild(marqueeContent);
+    marqueeContainer.appendChild(marqueeBar);
+
+    // --- START: New Dynamic Speed Calculation ---
+    // Define our desired speed in pixels per second. You can adjust this value.
+    const PIXELS_PER_SECOND = 60;
+
+    // Measure the actual width of one of the content blocks
+    const contentWidth = contentBlock1.offsetWidth;
+
+    // Calculate the required animation duration to maintain the desired speed
+    // Duration (seconds) = Distance (pixels) / Speed (pixels per second)
+    const duration = contentWidth / PIXELS_PER_SECOND;
+
+    // Apply the dynamically calculated duration directly to the element's style
+    marqueeContent.style.animationDuration = `${duration}s`;
+    // --- END: New Dynamic Speed Calculation ---
+};
+
 
     // --- Initial calls to run the app ---
     updateYear();

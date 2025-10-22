@@ -57,6 +57,75 @@
       "content": "*How to Activate a New Member from Your Own TGR Wallet* 🚀\nhttps://youtu.be/OfmDz-PrEUw\n\nHello! This guide is for existing TGR members who want to activate a new member (a downline) who has already registered but has not yet paid for their package.\n\n*Prerequisites:*\n- You must have sufficient funds in your *own* \"Current Wallet Balance\" to cover the new member's registration package.\n- You need to know the *exact username* of the person you want to activate.\n\n*Step 1: Log In to Your Own TGR Account* 🔑\n   - Go to the TGR login page.\n   - Enter your email and password to access your dashboard.\n\n*Step 2: Find the Pending Member* 🕵️‍♂️\n   - Tap the *menu icon* (three horizontal lines) at the top-left.\n   - Scroll down to the *NETWORK* section.\n   - Tap on *My Network* to expand the options.\n   - Select *Pending Member(s)*.\n   \n*Step 3: Search for the New Member* 🔍\n   - On the \"New Members\" page, you will see a search box.\n   - Enter the *username*, *email*, or *name* of the person you want to activate. Using the *username* is the most accurate method.\n   - Tap the *\"Search\"* button.\n\n*Step 4: Activate the Account* ✅\n   - The search result will display the new member's details.\n   - Scroll to the right until you see a blue *\"Activate\"* button.\n   - Tap the *\"Activate\"* button.\n\n*Step 5: Confirm the Activation and Payment* 💳\n   - A pop-up window titled *\"Activate Member From Wallet\"* will appear.\n   - *Package*: From the dropdown menu, select the package the new member is paying for (e.g., Pearl, Diamond).\n   - *Enter your wallet password*: Type in *your own TGR account password* to authorize the payment from your wallet.\n   - Tap the green *\"Proceed\"* button.\n\n*Step 6: Activation Confirmation* 🎉\n   - You will see a final confirmation message: *\"Activation Successful!\"*\n   - The registration fee for the selected package will be deducted from your wallet, and the new member's account will be instantly activated.\n   - You will also receive an immediate commission and Point Value (PV) for sponsoring the new member. You can check this on your dashboard.\n\nThat's it! You have successfully activated a new member on your team. 👍"
     },
     {
+      "title": "How to Welcome Your New Team Member (Onboarding)",
+      "content": "Follow these steps after you have successfully registered a new member to give them a warm welcome and set them up for success.\n\n*Step 1: Add to WhatsApp Groups* 👨‍👩‍👧‍👦\nFirst, add the new member to our two official WhatsApp groups:\n1. TGR Prosperity Network (for prospects)\n2. TGR UNLIMITED WEALTH TEAM (for registered members only)\n\n*Step 2: Generate the Welcome Message* ✍️\nUse the simple form below to generate the official, high-energy welcome message. Fill in all the details accurately.\n\n*Step 4: Post the Welcome Message* 🚀\nAfter generating the message, copy it and post it in both WhatsApp groups. Then, send the customized playbook link directly to your new team member's private chat. Tell them to start going through the training materials immediately.\n\n*Step 5: Encourage Prospecting* 📈\nInform your new team member that they can and should start adding their own prospects to the *TGR Prosperity Network* group right away.",
+      "form": {
+        "id": "welcomeMessageGenerator",
+        "fields": [
+          {
+            "type": "text",
+            "id": "newMemberName",
+            "label": "New Member's Full Name:",
+            "placeholder": "e.g., Mr. Buzz Lightyear"
+          },
+          {
+            "type": "select",
+            "id": "packageType",
+            "label": "Registration Package:",
+            "options": [
+              {
+                "value": "2500",
+                "text": "🪺 ₦2,500 Pearl Mini Package"
+              },
+              {
+                "value": "5000",
+                "text": "⚪️ ₦5,000 Pearl Package"
+              },
+              {
+                "value": "10000",
+                "text": "🐚 ₦10,000 Coral Package"
+              },
+              {
+                "value": "20000",
+                "text": "✳️ ₦20,000 Emerald Package"
+              },
+              {
+                "value": "30000",
+                "text": "💠 ₦30,000 Sapphire Package"
+              },
+              {
+                "value": "40000",
+                "text": "♦️ ₦40,000 Ruby Package"
+              },
+              {
+                "value": "50000",
+                "text": "💎 ₦50,000 Diamond Package"
+              },
+              {
+                "value": "100000",
+                "text": "👑 ₦100,000 Executive Diamond Package"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "newMemberUsername",
+            "label": "New Member's Username (Correct Spelling!):",
+            "placeholder": "e.g., BuzzToyStory"
+          }
+        ],
+        "button": {
+          "text": "Generate Welcome Message",
+          "id": "generateWelcomeBtn"
+        },
+        "result": {
+          "type": "textarea",
+          "id": "welcomeMessageResult"
+        },
+        "calculation_logic": "generateWelcomeMessage"
+      }
+    },
+    {
       "title": "How to Upgrade Your TGR Membership Package",
       "content": "*How to Upgrade Your TGR Membership Package* 🚀\n\nHello! This guide explains how to upgrade your TGR account from a lower package (like Pearl Mini) to a higher one (like Diamond) to increase your earning potential.\n\n_*Important Note:* You must have enough funds in your TGR wallet to cover the cost of the upgrade. For example, to upgrade from a ₦2,500 package to a ₦50,000 package, you'll need the difference of ₦47,500 in your wallet._\n\n*Step 1: Log In to Your TGR Account* 🔑\n   - Open your web browser and go to the TGR login page.\n   - Enter the email and password for the account you wish to upgrade.\n\n*Step 2: Go to Your Profile Page* 👤\n   - Once you are logged into your dashboard, find your *username* at the top-right of the page and tap on it.\n   - A dropdown menu will appear. Tap on *\"Profile\"*.\n   \n   _*Alternative:*_ You can also tap the *menu icon* (three horizontal lines) at the top-left, tap *\"My Account\"*, and then select *\"Profile\"*.\n\n*Step 3: Find the Upgrade Option* ⬆️\n   - On your profile page, scroll all the way to the bottom.\n   - You will see your current membership package displayed (e.g., \"Pearl Mini\").\n   - Below your current package, tap the blue *\"Upgrade\"* button.\n\n*Step 4: Select Your New Package* ✨\n   - A pop-up window titled *\"Membership Upgrade\"* will appear.\n   - *Package*: Tap the first dropdown menu and select the new, higher package you want to upgrade to (e.g., *\"Diamond\"*).\n   - *Select Payment*: In the second dropdown, choose *\"Wallet\"* as your payment method. This will use the funds already in your TGR account.\n   - Tap the final blue *\"Upgrade\"* button to confirm.\n\n*Step 5: Confirmation* ✅\n   - If the payment is successful, you will see a *\"Success! Upgrade Successful\"* message.\n   - Your account is now upgraded to the new package, and you can immediately start enjoying the increased benefits and earning potential!\n\nThat's it! Upgrading is a simple way to maximize your earnings on TGR. 📈"
     },

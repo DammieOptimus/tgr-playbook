@@ -80,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // The formatted content for display inside the app
                 const displayContent = formatContentForDisplay(item.content);
 
+                const contentInnerDivId = `content-inner-${index}`; // Unique ID for the inner div
+
                 itemElement.innerHTML = `
                     <div class="accordion-header">
                         <div class="accordion-number">${index + 1}</div>
@@ -87,38 +89,46 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="icon fas fa-chevron-down"></i>
                     </div>
                     <div class="accordion-content">
-                        <div class="accordion-content-inner">
+                        <div class="accordion-content-inner" id="${contentInnerDivId}">
                             ${displayContent}
-                            <button class="copy-button" data-content-index="${index}">
-                                <i class="fas fa-copy"></i>
-                                <span>Copy for WhatsApp</span>
-                            </button>
                         </div>
                     </div>
                 `;
 
                 accordionContainer.appendChild(itemElement);
 
-                // Add event listener for the copy button
-                const copyButton = itemElement.querySelector('.copy-button');
-                copyButton.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevents the accordion from closing when button is clicked
+                // If this guide item has a form, build and append it
+                if (item.form) {
+                    const contentContainer = itemElement.querySelector(`#${contentInnerDivId}`);
+                    buildAndAppendForm(item.form, contentContainer);
+                } else {
+                    // --- START: Add this entire 'else' block ---
+                    // Otherwise, add the standard "Copy for WhatsApp" button
+                    const contentContainer = itemElement.querySelector(`#${contentInnerDivId}`);
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button';
+                    copyButton.innerHTML = '<i class="fas fa-copy"></i> <span>Copy for WhatsApp</span>';
+                    contentContainer.appendChild(copyButton);
 
-                    // The original, unformatted text for WhatsApp
-                    const originalContent = instructions[index].content;
+                    copyButton.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevents the accordion from closing
 
-                    navigator.clipboard.writeText(originalContent).then(() => {
-                        // Provide visual feedback to the user
-                        const buttonText = copyButton.querySelector('span');
-                        buttonText.textContent = 'Copied!';
-                        copyButton.classList.add('copied');
+                        // The original, unformatted text for WhatsApp
+                        navigator.clipboard.writeText(item.content).then(() => {
+                            // Provide visual feedback to the user
+                            const buttonText = copyButton.querySelector('span');
+                            buttonText.textContent = 'Copied!';
+                            copyButton.classList.add('copied');
 
-                        setTimeout(() => {
-                            buttonText.textContent = 'Copy for WhatsApp';
-                            copyButton.classList.remove('copied');
-                        }, 2000); // Reset after 2 seconds
+                            setTimeout(() => {
+                                buttonText.textContent = 'Copy for WhatsApp';
+                                copyButton.classList.remove('copied');
+                            }, 2000); // Reset after 2 seconds
+                        });
                     });
-                });
+                    // --- END: Add this entire 'else' block ---
+                }
+
             });
         } catch (error) {
             accordionContainer.innerHTML = '<p style="color: red;">Failed to load instructions. Please check the file and try again.</p>';
@@ -218,57 +228,229 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function 7: Setup the scrolling notice bar ---
     const setupScrollingNotice = (noticeData) => {
-    // If the feature is disabled or data is missing, do nothing.
-    if (!noticeData || !noticeData.enabled) {
-        return;
-    }
+        // If the feature is disabled or data is missing, do nothing.
+        if (!noticeData || !noticeData.enabled) {
+            return;
+        }
 
-    const marqueeContainer = document.getElementById('marquee-container');
-    let content = noticeData.content;
+        const marqueeContainer = document.getElementById('marquee-container');
+        let content = noticeData.content;
 
-    // Find and replace [tel:...] placeholders
-    content = content.replace(/\[tel:([\d\s+-]+)\]/g, '<a href="tel:$1" class="marquee-link tel-link">$1</a>');
+        // Find and replace [tel:...] placeholders
+        content = content.replace(/\[tel:([\d\s+-]+)\]/g, '<a href="tel:$1" class="marquee-link tel-link">$1</a>');
 
-    // Find and replace [link:...|...] placeholders
-    content = content.replace(/\[link:(.*?)\|(.*?)\]/g, '<a href="$1" target="_blank" class="marquee-link web-link">$2</a>');
+        // Find and replace [link:...|...] placeholders
+        content = content.replace(/\[link:(.*?)\|(.*?)\]/g, '<a href="$1" target="_blank" class="marquee-link web-link">$2</a>');
 
-    // Create the main marquee bar
-    const marqueeBar = document.createElement('div');
-    marqueeBar.className = 'marquee-bar';
+        // Create the main marquee bar
+        const marqueeBar = document.createElement('div');
+        marqueeBar.className = 'marquee-bar';
 
-    // Create the inner content wrapper that will be animated
-    const marqueeContent = document.createElement('div');
-    marqueeContent.className = 'marquee-content';
+        // Create the inner content wrapper that will be animated
+        const marqueeContent = document.createElement('div');
+        marqueeContent.className = 'marquee-content';
 
-    // Create TWO identical blocks of content for the seamless loop
-    const contentBlock1 = document.createElement('div');
-    contentBlock1.className = 'marquee-content-block';
-    contentBlock1.innerHTML = content;
+        // Create TWO identical blocks of content for the seamless loop
+        const contentBlock1 = document.createElement('div');
+        contentBlock1.className = 'marquee-content-block';
+        contentBlock1.innerHTML = content;
 
-    const contentBlock2 = document.createElement('div');
-    contentBlock2.className = 'marquee-content-block';
-    contentBlock2.innerHTML = content;
+        const contentBlock2 = document.createElement('div');
+        contentBlock2.className = 'marquee-content-block';
+        contentBlock2.innerHTML = content;
 
-    marqueeContent.appendChild(contentBlock1);
-    marqueeContent.appendChild(contentBlock2);
-    marqueeBar.appendChild(marqueeContent);
-    marqueeContainer.appendChild(marqueeBar);
+        marqueeContent.appendChild(contentBlock1);
+        marqueeContent.appendChild(contentBlock2);
+        marqueeBar.appendChild(marqueeContent);
+        marqueeContainer.appendChild(marqueeBar);
 
-    // --- START: New Dynamic Speed Calculation ---
-    // Define our desired speed in pixels per second. You can adjust this value.
-    const PIXELS_PER_SECOND = 60;
+        // --- START: New Dynamic Speed Calculation ---
+        // Define our desired speed in pixels per second. You can adjust this value.
+        const PIXELS_PER_SECOND = 60;
 
-    // Measure the actual width of one of the content blocks
-    const contentWidth = contentBlock1.offsetWidth;
+        // Measure the actual width of one of the content blocks
+        const contentWidth = contentBlock1.offsetWidth;
 
-    // Calculate the required animation duration to maintain the desired speed
-    // Duration (seconds) = Distance (pixels) / Speed (pixels per second)
-    const duration = contentWidth / PIXELS_PER_SECOND;
+        // Calculate the required animation duration to maintain the desired speed
+        // Duration (seconds) = Distance (pixels) / Speed (pixels per second)
+        const duration = contentWidth / PIXELS_PER_SECOND;
 
-    // Apply the dynamically calculated duration directly to the element's style
-    marqueeContent.style.animationDuration = `${duration}s`;
-    // --- END: New Dynamic Speed Calculation ---
-};
+        // Apply the dynamically calculated duration directly to the element's style
+        marqueeContent.style.animationDuration = `${duration}s`;
+        // --- END: New Dynamic Speed Calculation ---
+    };
+
+
+    // --- START: Form Generation Logic ---
+
+    // Main function to build and append a form inside a guide
+    const buildAndAppendForm = (formJson, container) => {
+        const formWrapper = document.createElement('div');
+        formWrapper.className = 'form-in-guide';
+        formWrapper.id = formJson.id;
+
+        // Build each field
+        formJson.fields.forEach(field => {
+            const fieldGroup = document.createElement('div');
+            fieldGroup.className = 'form-group';
+
+            const label = document.createElement('label');
+            label.htmlFor = field.id;
+            label.textContent = field.label;
+            fieldGroup.appendChild(label);
+
+            if (field.type === 'select') {
+                const select = document.createElement('select');
+                select.id = field.id;
+                field.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.text;
+                    select.appendChild(option);
+                });
+                fieldGroup.appendChild(select);
+            } else { // Handles 'text', 'number', etc.
+                const input = document.createElement('input');
+                input.type = field.type;
+                input.id = field.id;
+                input.placeholder = field.placeholder || '';
+                fieldGroup.appendChild(input);
+            }
+            formWrapper.appendChild(fieldGroup);
+        });
+
+        // Build the action button
+        const button = document.createElement('button');
+        button.id = formJson.button.id;
+        button.className = 'form-action-btn';
+        button.textContent = formJson.button.text;
+        formWrapper.appendChild(button);
+
+        // Build the result area
+        const resultWrapper = document.createElement('div');
+        resultWrapper.className = 'form-result-wrapper';
+        if (formJson.result.type === 'textarea') {
+            const textarea = document.createElement('textarea');
+            textarea.id = formJson.result.id;
+            textarea.readOnly = true;
+            resultWrapper.appendChild(textarea);
+        }
+        formWrapper.appendChild(resultWrapper);
+
+        container.appendChild(formWrapper);
+
+        // After building, set up the interactivity
+        initializeFormInteractivity(formJson);
+    };
+
+    // This function acts as a "router" for all form logic
+    const initializeFormInteractivity = (formJson) => {
+        const button = document.getElementById(formJson.button.id);
+        if (!button) return;
+
+        button.addEventListener('click', () => {
+            switch (formJson.calculation_logic) {
+                case 'generateWelcomeMessage':
+                    generateWelcomeMessage(formJson);
+                    break;
+                // Add other 'case' statements here for future forms
+            }
+        });
+    };
+
+    // The specific logic for our Welcome Message Generator (UPGRADED)
+    const generateWelcomeMessage = (formJson) => {
+        // 1. Get values from the form fields
+        const nameInput = document.getElementById('newMemberName');
+        const usernameInput = document.getElementById('newMemberUsername');
+        const packageSelect = document.getElementById('packageType');
+        const resultTextarea = document.getElementById(formJson.result.id);
+        const resultWrapper = resultTextarea.parentElement;
+        const generateBtn = document.getElementById(formJson.button.id); // Get the button itself
+
+        // Simple validation
+        if (!nameInput.value || !usernameInput.value) {
+            alert('Please fill in both the name and username.');
+            return;
+        }
+
+        // --- START: New visual feedback for the button ---
+        const originalButtonText = generateBtn.innerHTML;
+        generateBtn.innerHTML = '<i class="fas fa-check"></i> Generated!';
+        generateBtn.classList.add('generated');
+        // --- END: New visual feedback for the button ---
+
+        // 2. Get the full text of the selected package
+        const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
+        const name = nameInput.value;
+        const username = usernameInput.value;
+
+        // 3. Construct the customized playbook link
+        const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;
+
+        // 4. Assemble the final message
+        const message = `🎉🎉🎉 *BOOM‼️BOOM BOOM* 🎉🎉🎉
+
+My dear TGR family, please help me give a grand welcome to our newest superstar 🌟  
+
+👨‍🚀 *${name}*  
+🔑 *Username:* *${username}* 🚀  
+
+...who just joined *TGR* with the ${selectedPackageText}  
+
+🎊🎊 You're officially WELCOME to your *Telecoms Sector Oil Well* 🛢️📲💰  
+May this journey bring you *massive earnings* and *unstoppable success*! 💸🔥
+
+💃🏽🕺🏽💰📞📲🛢️💎🥳
+
+
+📘 *_All the Information You Need to Use TGR is Here_*  
+👇🏽👇🏽👇🏽👇🏽  
+
+🔗 ${playbookLink} ✅  
+
+_Everything you need — guides, videos, and tools — all in one place!_ 💡📲`;
+
+        // 5. Display the message
+        resultTextarea.value = message;
+        resultWrapper.style.display = 'block';
+
+        // --- START: CRITICAL FIX - Recalculate accordion height to show result immediately ---
+        // This forces the accordion to resize to fit the new content
+        const accordionContent = resultWrapper.closest('.accordion-content');
+        if (accordionContent) {
+            // First, set height to auto to find the new full height, then set it back to that height
+            resultTextarea.style.height = 'auto';
+            resultTextarea.style.height = (resultTextarea.scrollHeight) + 'px';
+            accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
+        }
+        // --- END: CRITICAL FIX ---
+
+        // 6. Create and add a "Copy" button if it doesn't exist
+        if (!resultWrapper.querySelector('.copy-generated-text-btn')) {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-generated-text-btn';
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Message';
+            resultWrapper.appendChild(copyBtn);
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(message).then(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Message';
+                    }, 2000);
+                });
+            });
+        }
+
+        // Reset the generate button after 2 seconds
+        setTimeout(() => {
+            generateBtn.innerHTML = originalButtonText;
+            generateBtn.classList.remove('generated');
+        }, 2000);
+    };
+    // --- END: Form Generation Logic ---
+
 
 
     // --- Initial calls to run the app ---
@@ -276,4 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadInstructions();
     setupRotatingButtonText();
     setupBackToTopButton();
+
+
 });

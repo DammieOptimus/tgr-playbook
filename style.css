@@ -396,3 +396,94 @@ body {
 .marquee-link:hover {
     color: #ffffff !important;
 }
+
+
+/* --- Form Elements Inside Guides --- */
+.form-in-guide {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #4a505a;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-result-wrapper textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: var(--background-color);
+    border: 1px solid #5c636e;
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: var(--font-family);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(0, 153, 221, 0.3);
+}
+
+.form-action-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--accent-color);
+    color: var(--header-text-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-action-btn:hover {
+    background-color: #B82414; /* Darker TGR Red */
+    transform: translateY(-2px);
+}
+
+.form-action-btn.generated {
+    background-color: var(--secondary-color); /* TGR Blue for success */
+    cursor: default;
+}
+
+.form-result-wrapper {
+    display: none; /* Hidden by default */
+    margin-top: 1.5rem;
+    position: relative;
+}
+
+.form-result-wrapper textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.copy-generated-text-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--secondary-color);
+    color: var(--header-text-color);
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.copy-generated-text-btn:hover {
+    background-color: var(--primary-color);
+}

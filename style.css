@@ -487,3 +487,10 @@ body {
 .copy-generated-text-btn:hover {
     background-color: var(--primary-color);
 }
+
+/* --- Deeplink Highlight Styling --- */
+.deeplink-highlight {
+    /* Use a box-shadow for a glow effect that doesn't affect layout */
+    box-shadow: 0 0 0 4px var(--secondary-color), 0 8px 25px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 3s ease-out; /* Smoothly fade out the glow */
+}

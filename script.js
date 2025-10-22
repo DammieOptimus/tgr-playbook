@@ -1,5 +1,5 @@
 // Wait until the entire HTML page is loaded before running our script
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     const accordionContainer = document.getElementById('accordion-container');
     const yearSpan = document.getElementById('current-year');
@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create an accordion item for each instruction
             instructions.forEach((item, index) => {
                 const itemElement = document.createElement('div');
+                itemElement.dataset.guideIndex = index + 1;
                 itemElement.classList.add('accordion-item');
 
                 // The formatted content for display inside the app
@@ -452,12 +453,46 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     // --- END: Form Generation Logic ---
 
 
+    // --- Function 8: Handle deeplinking to a specific guide ---
+    const handleDeeplinking = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const guideNumber = urlParams.get('guide');
+
+        // If no 'guide' parameter is found, do nothing.
+        if (!guideNumber) {
+            return;
+        }
+
+        // Find the target accordion item using the data attribute we added
+        const targetGuide = document.querySelector(`[data-guide-index="${guideNumber}"]`);
+
+        if (targetGuide) {
+            // Use a short delay to ensure all content is rendered before scrolling
+            setTimeout(() => {
+                // Programmatically click the header to open the accordion
+                targetGuide.querySelector('.accordion-header').click();
+
+                // Add a temporary highlight class
+                targetGuide.classList.add('deeplink-highlight');
+
+                // Scroll the element into view smoothly
+                targetGuide.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Remove the highlight class after a few seconds
+                setTimeout(() => {
+                    targetGuide.classList.remove('deeplink-highlight');
+                }, 2500); // Highlight lasts for 2.5 seconds
+
+            }, 200); // 200ms delay
+        }
+    };
+
 
     // --- Initial calls to run the app ---
     updateYear();
-    loadInstructions();
+    await loadInstructions();
     setupRotatingButtonText();
     setupBackToTopButton();
-
+    handleDeeplinking();
 
 });

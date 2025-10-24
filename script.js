@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 My dear *TGR FAMILY*, please help me give a *GRAND WELCOME* to our newest superstar 🌟  
 
 👨‍🚀 *${name}*  
-🔑 *Username:* \`${username}\` 🚀  
+🔑 *Username: ${username}* 🚀  
 
 ...who just joined *TGR* with the *${selectedPackageText}* 
 

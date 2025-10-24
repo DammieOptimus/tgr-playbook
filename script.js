@@ -390,17 +390,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;
 
         // 4. Assemble the final message
-        const message = `🎉🎉🎉 *BOOM‼️BOOM BOOM* 🎉🎉🎉
+        const message = `🎉🎉🎉 *BOOM‼️ BOOM‼️ BOOM‼️* 🎉🎉🎉
 
-My dear TGR family, please help me give a grand welcome to our newest superstar 🌟  
+My dear *TGR FAMILY*, please help me give a *GRAND WELCOME* to our newest superstar 🌟  
 
 👨‍🚀 *${name}*  
-🔑 *Username:* *${username}* 🚀  
+🔑 *Username:* ``${username}`` 🚀  
 
-...who just joined *TGR* with the ${selectedPackageText}  
+...who just joined *TGR* with the *${selectedPackageText}* 
 
-🎊🎊 You're officially WELCOME to your *Telecoms Sector Oil Well* 🛢️📲💰  
-May this journey bring you *massive earnings* and *unstoppable success*! 💸🔥
+🎊🎊 *You're officially WELCOME to your* 🛢️ *TELECOMS SECTOR OIL WELL* 🛢️📲💰  
+May this journey bring you *MASSIVE EARNINGS* and *UNSTOPPABLE SUCCESS*! 💸🔥
 
 💃🏽🕺🏽💰📞📲🛢️💎🥳
 

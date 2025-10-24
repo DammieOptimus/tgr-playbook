@@ -284,6 +284,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- START: Form Generation Logic ---
 
+    // NEW HELPER FUNCTION TO CONVERT A STRING TO TITLE CASE
+    const toTitleCase = (str) => {
+        if (!str) return '';
+        // This regex finds the first character of every word (including after a hyphen or apostrophe)
+        // and capitalizes it, after making the whole string lowercase first.
+        return str.toLowerCase().replace(/(?:^|\s|-|')\S/g, (char) => char.toUpperCase());
+    };
+
     // Main function to build and append a form inside a guide
     const buildAndAppendForm = (formJson, container) => {
         const formWrapper = document.createElement('div');
@@ -383,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 2. Get the full text of the selected package
         const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
-        const name = nameInput.value;
+        const name = toTitleCase(nameInput.value);
         const username = usernameInput.value;
 
         // 3. Construct the customized playbook link

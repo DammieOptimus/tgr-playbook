@@ -377,8 +377,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const resultWrapper = resultTextarea.parentElement;
         const generateBtn = document.getElementById(formJson.button.id); // Get the button itself
 
+        // Get the values and immediately trim any leading/trailing whitespace
+        const trimmedName = nameInput.value.trim();
+        const trimmedUsername = usernameInput.value.trim();
+
         // Simple validation
-        if (!nameInput.value || !usernameInput.value) {
+        if (!trimmedName || !trimmedUsername) {
             alert('Please fill in both the name and username.');
             return;
         }
@@ -391,8 +395,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 2. Get the full text of the selected package
         const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
-        const name = toTitleCase(nameInput.value);
-        const username = usernameInput.value;
+        const name = toTitleCase(trimmedName);
+        const username = trimmedUsername;
 
         // 3. Construct the customized playbook link
         const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;

@@ -537,12 +537,61 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         }
     };
 
+    // --- Function 9: Animate the search input placeholder text ---
+    const setupRotatingPlaceholder = () => {
+        const searchInput = document.getElementById('searchInput');
+
+        // Safety check: if the search input doesn't exist, do nothing.
+        if (!searchInput) {
+            return;
+        }
+
+        const placeholderPrompts = [
+            "Search for 'password reset'...",
+            "Try searching for 'buy data'...",
+            "Looking for 'commissions'?",
+            "Try searching 'how to activate'...",
+            "Find the guide on 'upgrading'...",
+            "Search for 'wallet funding'...",
+            "Try searching 'cable tv'...",
+            "How do I 'contact support'?",
+            "Search by content or title...",
+            "Find any guide instantly...",
+            "Try searching 'referral link'...",
+            "Type here to find what you need...",
+            "Search guides by title or content...",
+            "Type what you are looking for here...",
+            "Try searching 'how to register'..."
+        ];
+        let currentIndex = 0;
+
+        // Set an interval to run the code every 10 seconds
+        setInterval(() => {
+            // 1. Trigger the fade-out effect by adding a class
+            searchInput.classList.add('placeholder-fade-out');
+
+            // 2. Wait for the fade-out to finish
+            setTimeout(() => {
+                // 3. Cycle to the next prompt
+                currentIndex = (currentIndex + 1) % placeholderPrompts.length;
+
+                // 4. Update the placeholder text
+                searchInput.placeholder = placeholderPrompts[currentIndex];
+
+                // 5. Trigger the fade-in effect by removing the class
+                searchInput.classList.remove('placeholder-fade-out');
+            }, 500); // This must match the CSS transition duration
+
+        }, 15000); // 15-second interval
+    };
+
 
     // --- Initial calls to run the app ---
     updateYear();
     await loadInstructions();
     setupRotatingButtonText();
     setupBackToTopButton();
+    setupRotatingPlaceholder();
     handleDeeplinking();
 
 });

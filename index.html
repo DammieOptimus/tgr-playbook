@@ -45,11 +45,22 @@
     <main class="container">
         <!-- Placeholder for the scrolling notice -->
         <div id="marquee-container"></div>
-        
+
         <a href="https://dammieoptimus.github.io/usefultgrlinks/" target="_blank" class="video-hub-link">
             <i class="fas fa-play-circle"></i>
             <span>Explore the TGR Video Training Hub</span>
         </a>
+
+        <!-- START: New Search Box Section -->
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search guides by title or content...">
+        </div>
+
+        <div id="no-results-message" style="display: none;">
+            <p>No guides found matching your search.</p>
+        </div>
+        <!-- END: New Search Box Section -->
 
         <!-- The training instructions will be dynamically loaded here by JavaScript -->
         <div id="accordion-container">

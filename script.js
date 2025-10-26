@@ -131,6 +131,44 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
             });
+
+
+            // --- START: New Search Functionality ---
+            const searchInput = document.getElementById('searchInput');
+            const noResultsMessage = document.getElementById('no-results-message');
+            const allGuides = document.querySelectorAll('.accordion-item');
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                let matchesFound = 0;
+
+                // Loop through the original data source, which is faster
+                instructions.forEach((guide, index) => {
+                    const guideTitle = guide.title.toLowerCase();
+                    const guideContent = guide.content.toLowerCase();
+                    const isMatch = guideTitle.includes(searchTerm) || guideContent.includes(searchTerm);
+
+                    const guideElement = document.querySelector(`[data-guide-index="${index + 1}"]`);
+
+                    if (guideElement) {
+                        if (isMatch) {
+                            guideElement.style.display = 'block';
+                            matchesFound++;
+                        } else {
+                            guideElement.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Show or hide the "no results" message
+                if (matchesFound > 0) {
+                    noResultsMessage.style.display = 'none';
+                } else {
+                    noResultsMessage.style.display = 'block';
+                }
+            });
+            // --- END: New Search Functionality ---
+
         } catch (error) {
             accordionContainer.innerHTML = '<p style="color: red;">Failed to load instructions. Please check the file and try again.</p>';
             console.error('There was a problem fetching the instructions:', error);

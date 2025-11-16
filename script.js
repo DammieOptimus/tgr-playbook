@@ -101,7 +101,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // If this guide item has a form, build and append it
                 if (item.form) {
                     const contentContainer = itemElement.querySelector(`#${contentInnerDivId}`);
+                    // Step 1: Build the basic container and input fields (if any)
                     buildAndAppendForm(item.form, contentContainer);
+                    // Step 2: Now, run the interactivity/builder router for that form
+                    initializeFormInteractivity(item.form);
                 } else {
                     // --- START: Add this entire 'else' block ---
                     // Otherwise, add the standard "Copy for WhatsApp" button
@@ -336,6 +339,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         formWrapper.className = 'form-in-guide';
         formWrapper.id = formJson.id;
 
+        // --- START: CRITICAL FIX ---
+        // First, check if this form has input fields. If not, it's a toolkit,
+        // which is handled by a different function, so we can stop here.
+        if (!formJson.fields) {
+            container.appendChild(formWrapper); // Still add the main wrapper for the toolkit to use
+            return;
+        }
+        // --- END: CRITICAL FIX ---
+
         // Build each field
         formJson.fields.forEach(field => {
             const fieldGroup = document.createElement('div');
@@ -387,11 +399,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         container.appendChild(formWrapper);
 
         // After building, set up the interactivity
-        initializeFormInteractivity(formJson);
+        //initializeFormInteractivity(formJson);
     };
 
     // This function acts as a "router" for all form logic
     const initializeFormInteractivity = (formJson) => {
+        // SPECIAL CASE: For toolkits that need immediate setup, not a button click.
+        if (formJson.calculation_logic === 'setupRegistrationToolkit') {
+            setupRegistrationToolkit(formJson);
+            return; // Stop here for this type of form
+        }
+
+        // Default behavior for calculator-style forms
         const button = document.getElementById(formJson.button.id);
         if (!button) return;
 
@@ -585,6 +604,69 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         }, 15000); // 15-second interval
     };
 
+    // --- START: New Toolkit Logic ---
+
+    // Helper function for visual feedback on copy buttons
+    const giveCopyFeedback = (button, iconClass, text) => {
+        const originalHTML = button.innerHTML;
+        button.innerHTML = `<i class="fas fa-check"></i> Copied!`;
+        button.classList.add('copied');
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('copied');
+        }, 2000);
+    };
+
+    // The specific logic for our Registration Toolkit
+    const setupRegistrationToolkit = (formJson) => {
+        const formWrapper = document.getElementById(formJson.id);
+        const { plans, details } = formJson.text_blocks;
+
+        const combinedText = `${plans}\n\n${details}`;
+
+        // Create the HTML structure for the toolkit
+        formWrapper.innerHTML = `
+        <div class="toolkit-section">
+            <h4>Plans & Benefits Message</h4>
+            <textarea readonly>${plans}</textarea>
+            <button class="toolkit-copy-btn" data-copy-target="plans"><i class="fas fa-copy"></i> Copy Plans & Benefits</button>
+        </div>
+        <div class="toolkit-section">
+            <h4>Registration Details Form</h4>
+            <textarea readonly>${details}</textarea>
+            <button class="toolkit-copy-btn" data-copy-target="details"><i class="fas fa-copy"></i> Copy Registration Form</button>
+        </div>
+        <button class="form-action-btn" data-copy-target="all"><i class="fas fa-clipboard-list"></i> Copy Both Messages Together</button>
+    `;
+
+        // Add event listeners to all new buttons
+        const copyPlansBtn = formWrapper.querySelector('[data-copy-target="plans"]');
+        const copyDetailsBtn = formWrapper.querySelector('[data-copy-target="details"]');
+        const copyAllBtn = formWrapper.querySelector('[data-copy-target="all"]');
+
+        copyPlansBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(plans);
+            giveCopyFeedback(copyPlansBtn);
+        });
+
+        copyDetailsBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(details);
+            giveCopyFeedback(copyDetailsBtn);
+        });
+
+        copyAllBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(combinedText);
+            giveCopyFeedback(copyAllBtn);
+        });
+
+        // Auto-resize textareas to fit their content
+        formWrapper.querySelectorAll('textarea').forEach(textarea => {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        });
+    };
+
+    // --- END: New Toolkit Logic ---
 
     // --- Initial calls to run the app ---
     updateYear();

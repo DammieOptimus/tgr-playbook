@@ -538,3 +538,58 @@ body {
     color: #aaa;
     font-size: 1.1rem;
 }
+
+
+/* --- Registration Toolkit Styling --- */
+.toolkit-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #4a505a;
+}
+
+.toolkit-section:last-of-type {
+    border-bottom: none;
+}
+
+.toolkit-section h4 {
+    color: var(--highlight-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.toolkit-section textarea {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--background-color); /* Matches page bg */
+    border: 1px dashed #5c636e; /* Dashed border to look like a template */
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: monospace; /* Monospace font helps show formatting */
+    resize: none;
+    line-height: 1.6;
+}
+
+.toolkit-copy-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    font-weight: 600;
+    background-color: #4a505a;
+    color: var(--text-color);
+    border: 1px solid #5c636e;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toolkit-copy-btn:hover {
+    background-color: #5c636e;
+    border-color: var(--secondary-color);
+}
+
+.toolkit-copy-btn.copied,
+.form-action-btn[data-copy-target="all"].copied {
+    background-color: var(--secondary-color);
+    color: var(--header-text-color);
+}

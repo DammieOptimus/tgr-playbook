@@ -83,6 +83,8 @@ body {
     background: linear-gradient(135deg, #E74C3C, var(--accent-color));
     color: var(--header-text-color);
     padding: 1rem 1.5rem;
+    padding-bottom: 1rem; /* Make extra room at the bottom for the counter */
+    position: relative;   /* This allows us to place the counter absolutely inside */
     border-radius: 50px;
     text-decoration: none;
     font-size: 1.1rem;
@@ -592,4 +594,18 @@ body {
 .form-action-btn[data-copy-target="all"].copied {
     background-color: var(--secondary-color);
     color: var(--header-text-color);
+}
+
+
+/* --- Real-time Click Counter Styling --- */
+.click-counter {
+    position: absolute; /* Takes it out of the normal flow */
+    bottom: 8px;        /* Pins it 8px from the bottom */
+    left: 0;            /* Pins it to the left... */
+    right: 0;           /* ...and the right, effectively spanning the width */
+    text-align: center; /* Centers the text */
+    font-size: 0.6rem;  /* Smaller font */
+    opacity: 0.9;       /* Slightly transparent */
+    font-weight: 400;   /* Normal weight, not bold */
+    pointer-events: none; /* Ensures clicking the number still clicks the button */
 }

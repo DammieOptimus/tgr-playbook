@@ -1,5 +1,24 @@
+// --- FIREBASE IMPORTS ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getFirestore, doc, updateDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+
 // Wait until the entire HTML page is loaded before running our script
 document.addEventListener('DOMContentLoaded', async () => {
+    // --- FIREBASE CONFIGURATION ---
+    // REPLACE THE VALUES BELOW WITH YOUR EXACT FIREBASE CONFIG
+    const firebaseConfig = {
+        apiKey: "AIzaSyCQ2IOoNAGEYWJMN4iB1j1cgg199MLqCnU",
+        authDomain: "magic-notebook-project.firebaseapp.com",
+        projectId: "magic-notebook-project",
+        storageBucket: "magic-notebook-project.firebasestorage.app",
+        messagingSenderId: "279845274939",
+        appId: "1:279845274939:web:a7cfa6e916b7e5ca5d631e"
+    };
+
+    // --- INITIALIZE FIREBASE ---
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     const accordionContainer = document.getElementById('accordion-container');
     const yearSpan = document.getElementById('current-year');
@@ -10,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             yearSpan.textContent = new Date().getFullYear();
         }
     };
+
 
     // --- Function 2: Convert WhatsApp formatting to HTML for display ---
     // This makes the text look good inside the app.
@@ -668,6 +688,62 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
 
     // --- END: New Toolkit Logic ---
 
+    // --- Function 9: Track Video Hub Clicks ---
+    const setupClickTracking = () => {
+        const videoButton = document.querySelector('.video-hub-link');
+
+        if (videoButton) {
+            videoButton.addEventListener('click', async () => {
+                console.log("Video hub button clicked. Sending stats to Firestore...");
+
+                try {
+                    // 1. Create a reference to the specific document in the database
+                    // Syntax: doc(database, "collection_name", "document_name")
+                    const statsRef = doc(db, "app_stats", "general_analytics");
+
+                    // 2. Update the document
+                    // We use 'increment(1)' which is a special Firebase tool. 
+                    // It safely adds 1 to the existing number, even if 100 people click at once.
+                    await updateDoc(statsRef, {
+                        video_hub_clicks: increment(1)
+                    });
+
+                    console.log("Click count incremented successfully!");
+                } catch (error) {
+                    console.error("Error updating click count:", error);
+                }
+            });
+        }
+    };
+
+    // --- Function 10: Display Real-time Click Count ---
+    const setupRealtimeCounter = () => {
+        const counterSpan = document.querySelector('.click-counter');
+
+        // Safety check
+        if (!counterSpan) return;
+
+        // Reference to the database document
+        const statsRef = doc(db, "app_stats", "general_analytics");
+
+        // "onSnapshot" sets up a permanent connection.
+        // Whenever the database changes, this code runs automatically.
+        onSnapshot(statsRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                // Get the number, or default to 0 if it doesn't exist yet
+                const count = data.video_hub_clicks || 0;
+
+                // Update the text on the screen
+                counterSpan.textContent = `Total Clicks: ${count}`;
+            } else {
+                // If the document doesn't exist yet (first run), show 0
+                counterSpan.textContent = `Total Clicks: 0`;
+            }
+        });
+    };
+
+
     // --- Initial calls to run the app ---
     updateYear();
     await loadInstructions();
@@ -675,5 +751,7 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     setupBackToTopButton();
     setupRotatingPlaceholder();
     handleDeeplinking();
+    setupClickTracking();
+    setupRealtimeCounter();
 
 });

@@ -117,7 +117,7 @@ body {
 
 .accordion-header {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     gap: 1.5rem;
     padding: 1.25rem 1.5rem;
@@ -137,6 +137,7 @@ body {
     font-size: 1.2rem;
     color: var(--secondary-color);
     transition: transform 0.3s ease;
+    margin-left: auto; /* <-- THIS IS THE MAGIC FIX: Pushes icon to the far right */
 }
 
 .accordion-content {
@@ -608,4 +609,43 @@ body {
     opacity: 0.9;       /* Slightly transparent */
     font-weight: 400;   /* Normal weight, not bold */
     pointer-events: none; /* Ensures clicking the number still clicks the button */
+}
+
+
+/* --- Favorites System Styling --- */
+.favorites-heading {
+    color: var(--accent-color); /* TGR Red */
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+    border-bottom: 2px solid var(--accent-color);
+    display: inline-block;
+    padding-bottom: 0.2rem;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #ccc; /* Default gray */
+    transition: color 0.3s ease, transform 0.2s ease;
+    padding: 0 0.5rem;
+    margin-right: 0.5rem; /* Space between star and title */
+}
+
+/* When active/favorited */
+.favorite-btn.active {
+    color: #FFD700; /* Gold color */
+    transform: scale(1.1);
+}
+
+.favorite-btn:hover {
+    transform: scale(1.2);
+}
+
+/* Adjust header layout to accommodate the star */
+.accordion-header {
+    /* We are just tweaking the existing rule slightly to ensure alignment */
+    align-items: center;
 }

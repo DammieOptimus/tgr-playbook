@@ -55,57 +55,53 @@ document.addEventListener('DOMContentLoaded', async () => {
             .replace(/\n/g, '<br>');
     };
 
-    // --- Function 3: Fetch and display instructions ---
+    // --- Function 3: Fetch and display instructions (UPDATED for Favorites) ---
     const loadInstructions = async () => {
         try {
-            // Fetch the data from our JSON file
             const response = await fetch('instructions.json');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-
             const instructions = data.instructions;
 
             // Run the new function to set up the scrolling notice
             setupScrollingNotice(data.scrolling_notice);
 
             // --- START: Dynamic Referral ID Replacement ---
-            // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            const refId = urlParams.get('refid'); // Look for ?refid=... in the URL
+            const refId = urlParams.get('refid');
 
-            // If a referral ID is found in the URL, replace the placeholder
             if (refId) {
                 instructions.forEach(item => {
-                    // Using a regular expression with a 'g' flag to replace all instances
-                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, refId);
+                    item.content = item.content.replace(/YOUR_REFERRAL_ID/g, refId);
                 });
             } else {
-                // If no refid, replace with the default generic text
                 instructions.forEach(item => {
-                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, 'TYPE-YOUR-REFERRAL-ID-HERE');
+                    item.content = item.content.replace(/YOUR_REFERRAL_ID/g, 'TYPE-YOUR-REFERRAL-ID-HERE');
                 });
             }
             // --- END: Dynamic Referral ID Replacement ---
 
-            // Clear the "Loading..." message
+            const accordionContainer = document.getElementById('accordion-container');
             accordionContainer.innerHTML = '';
 
-            // Create an accordion item for each instruction
             instructions.forEach((item, index) => {
                 const itemElement = document.createElement('div');
-                itemElement.dataset.guideIndex = index + 1;
                 itemElement.classList.add('accordion-item');
+                // Add the ID for deep linking AND sorting
+                itemElement.dataset.guideIndex = index + 1;
 
-                // The formatted content for display inside the app
                 const displayContent = formatContentForDisplay(item.content);
+                const contentInnerDivId = `content-inner-${index}`;
 
-                const contentInnerDivId = `content-inner-${index}`; // Unique ID for the inner div
-
+                // --- NEW: HTML Structure with Star Icon ---
                 itemElement.innerHTML = `
                     <div class="accordion-header">
                         <div class="accordion-number">${index + 1}</div>
+                        <button class="favorite-btn" title="Pin to Favorites" data-index="${index + 1}">
+                            <i class="far fa-star"></i>
+                        </button>
                         <h2>${item.title}</h2>
                         <i class="icon fas fa-chevron-down"></i>
                     </div>
@@ -118,16 +114,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 accordionContainer.appendChild(itemElement);
 
-                // If this guide item has a form, build and append it
                 if (item.form) {
                     const contentContainer = itemElement.querySelector(`#${contentInnerDivId}`);
-                    // Step 1: Build the basic container and input fields (if any)
                     buildAndAppendForm(item.form, contentContainer);
-                    // Step 2: Now, run the interactivity/builder router for that form
                     initializeFormInteractivity(item.form);
                 } else {
-                    // --- START: Add this entire 'else' block ---
-                    // Otherwise, add the standard "Copy for WhatsApp" button
                     const contentContainer = itemElement.querySelector(`#${contentInnerDivId}`);
                     const copyButton = document.createElement('button');
                     copyButton.className = 'copy-button';
@@ -135,11 +126,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     contentContainer.appendChild(copyButton);
 
                     copyButton.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevents the accordion from closing
-
-                        // The original, unformatted text for WhatsApp
+                        e.stopPropagation();
                         navigator.clipboard.writeText(item.content).then(() => {
-                            // Provide visual feedback to the user
                             const buttonText = copyButton.querySelector('span');
                             buttonText.textContent = 'Copied!';
                             copyButton.classList.add('copied');
@@ -147,59 +135,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                             setTimeout(() => {
                                 buttonText.textContent = 'Copy for WhatsApp';
                                 copyButton.classList.remove('copied');
-                            }, 2000); // Reset after 2 seconds
+                            }, 2000);
                         });
                     });
-                    // --- END: Add this entire 'else' block ---
-                }
-
-            });
-
-
-            // --- START: New Search Functionality ---
-            const searchInput = document.getElementById('searchInput');
-            const noResultsMessage = document.getElementById('no-results-message');
-            const allGuides = document.querySelectorAll('.accordion-item');
-
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                let matchesFound = 0;
-
-                // Loop through the original data source, which is faster
-                instructions.forEach((guide, index) => {
-                    const guideTitle = guide.title.toLowerCase();
-                    const guideContent = guide.content.toLowerCase();
-                    const isMatch = guideTitle.includes(searchTerm) || guideContent.includes(searchTerm);
-
-                    const guideElement = document.querySelector(`[data-guide-index="${index + 1}"]`);
-
-                    if (guideElement) {
-                        if (isMatch) {
-                            guideElement.style.display = 'block';
-                            matchesFound++;
-                        } else {
-                            guideElement.style.display = 'none';
-                        }
-                    }
-                });
-
-                // Show or hide the "no results" message
-                if (matchesFound > 0) {
-                    noResultsMessage.style.display = 'none';
-                } else {
-                    noResultsMessage.style.display = 'block';
                 }
             });
-            // --- END: New Search Functionality ---
+
+            // --- NEW: Initialize the Favorites System Logic ---
+            setupFavoritesSystem();
+
+            // --- NEW: Add Search Logic (Moved here) ---
+            setupSearchLogic(instructions);
 
         } catch (error) {
-            accordionContainer.innerHTML = '<p style="color: red;">Failed to load instructions. Please check the file and try again.</p>';
-            console.error('There was a problem fetching the instructions:', error);
+            document.getElementById('accordion-container').innerHTML = '<p style="color: red;">Failed to load instructions.</p>';
+            console.error(error);
         }
     };
 
-    // --- Function 4: Handle accordion open/close logic ---
-    accordionContainer.addEventListener('click', (e) => {
+    // --- Function 4: Handle accordion open/close logic (UPDATED) ---
+    // We create a single handler function
+    const handleAccordionClick = (e) => {
+        // Check if the click was on a Favorite Star Button
+        if (e.target.closest('.favorite-btn')) {
+            return; // Let the specific favorite button listener handle it
+        }
+
         const header = e.target.closest('.accordion-header');
         if (header) {
             const item = header.parentElement;
@@ -207,23 +168,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             // If the item is already active, we don't want to close others
             const isAlreadyActive = item.classList.contains('active');
 
-            // Optional: Close all other items for a cleaner interface
-            document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
+            // Close all items in BOTH containers
+            document.querySelectorAll('.accordion-item').forEach(el => {
+                el.classList.remove('active');
+                // Reset max-height
+                const content = el.querySelector('.accordion-content');
+                if (content) content.style.maxHeight = '0';
+            });
 
             if (!isAlreadyActive) {
                 item.classList.add('active');
+                // Open the specific content
+                const content = item.querySelector('.accordion-content');
+                if (content) content.style.maxHeight = content.scrollHeight + "px";
             }
-
-            // Adjust max-height for smooth animation
-            document.querySelectorAll('.accordion-content').forEach(content => {
-                if (content.parentElement.classList.contains('active')) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                } else {
-                    content.style.maxHeight = '0';
-                }
-            });
         }
-    });
+    };
+
+    // Attach the handler to BOTH containers
+    document.getElementById('accordion-container').addEventListener('click', handleAccordionClick);
+    document.getElementById('favorites-container').addEventListener('click', handleAccordionClick);
 
     // --- Function 5: Animate the main video hub button text ---
     const setupRotatingButtonText = () => {
@@ -793,6 +757,119 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         });
     };
 
+    // --- Function: Setup Search Logic (Extracted for cleanliness) ---
+    const setupSearchLogic = (instructions) => {
+        const searchInput = document.getElementById('searchInput');
+        const noResultsMessage = document.getElementById('no-results-message');
+
+        if (!searchInput) return;
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            let matchesFound = 0;
+
+            instructions.forEach((guide, index) => {
+                const guideTitle = guide.title.toLowerCase();
+                const guideContent = guide.content.toLowerCase();
+                const isMatch = guideTitle.includes(searchTerm) || guideContent.includes(searchTerm);
+
+                const guideElement = document.querySelector(`[data-guide-index="${index + 1}"]`);
+
+                if (guideElement) {
+                    if (isMatch) {
+                        guideElement.style.display = 'block';
+                        matchesFound++;
+                    } else {
+                        guideElement.style.display = 'none';
+                    }
+                }
+            });
+
+            if (matchesFound > 0) {
+                noResultsMessage.style.display = 'none';
+            } else {
+                noResultsMessage.style.display = 'block';
+            }
+        });
+    };
+
+    // --- Function 11: Setup Favorites System ---
+    const setupFavoritesSystem = () => {
+        const favoritesContainer = document.getElementById('favorites-container');
+        const mainContainer = document.getElementById('accordion-container');
+
+        // 1. Get saved favorites from LocalStorage (or empty array)
+        let savedFavorites = JSON.parse(localStorage.getItem('tgrFavorites')) || [];
+
+        // Helper: Sort function to keep the main list in 1, 2, 3 order
+        const sortMainList = () => {
+            const items = Array.from(mainContainer.children);
+            items.sort((a, b) => {
+                return parseInt(a.dataset.guideIndex) - parseInt(b.dataset.guideIndex);
+            });
+            items.forEach(item => mainContainer.appendChild(item));
+        };
+
+        // Helper: Update UI based on favorites list
+        const updateFavoritesUI = () => {
+            // First, check if we need to show the favorites container
+            if (savedFavorites.length > 0) {
+                favoritesContainer.style.display = 'block';
+            } else {
+                favoritesContainer.style.display = 'none';
+            }
+
+            // Loop through ALL items to check their status
+            const allItems = document.querySelectorAll('.accordion-item');
+            allItems.forEach(item => {
+                const index = parseInt(item.dataset.guideIndex);
+                const btn = item.querySelector('.favorite-btn');
+                const icon = btn.querySelector('i');
+
+                if (savedFavorites.includes(index)) {
+                    // It IS a favorite
+                    btn.classList.add('active');
+                    icon.classList.remove('far'); // Outline
+                    icon.classList.add('fas');    // Solid
+                    favoritesContainer.appendChild(item); // Move to top
+                } else {
+                    // It is NOT a favorite
+                    btn.classList.remove('active');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    mainContainer.appendChild(item); // Move back to main list
+                }
+            });
+
+            // Ensure the main list stays in 1-2-3 order after items return to it
+            sortMainList();
+        };
+
+        // 2. Initial Run
+        updateFavoritesUI();
+
+        // 3. Add Event Listeners to Stars
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Don't open the accordion
+                const index = parseInt(btn.dataset.index);
+
+                if (savedFavorites.includes(index)) {
+                    // Remove from favorites
+                    savedFavorites = savedFavorites.filter(i => i !== index);
+                } else {
+                    // Add to favorites
+                    savedFavorites.push(index);
+                }
+
+                // Save to browser memory
+                localStorage.setItem('tgrFavorites', JSON.stringify(savedFavorites));
+
+                // Update the screen
+                updateFavoritesUI();
+            });
+        });
+    };
 
     // --- Initial calls to run the app ---
     updateYear();

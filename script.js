@@ -442,19 +442,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Add other 'case' statements here for future forms
             }
         });
+
+        // --- NEW ADDITION ---
+        // If this is the Welcome Message form, set up the extra UI logic
+        if (formJson.calculation_logic === 'generateWelcomeMessage') {
+            setupWelcomeMessageUI(formJson);
+        }
     };
 
-    // The specific logic for our Welcome Message Generator (UPGRADED)
+    // NEW: Sets up the dynamic UI changes for the Welcome/Upgrade form
+    const setupWelcomeMessageUI = (formJson) => {
+        const messageTypeSelect = document.getElementById('messageType');
+        const packageLabel = document.querySelector(`label[for="packageType"]`);
+        const generateBtn = document.getElementById(formJson.button.id);
+
+        if (!messageTypeSelect || !packageLabel || !generateBtn) return;
+
+        // Listen for changes on the "Message Type" dropdown
+        messageTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'upgrade') {
+                // Switch to Upgrade Mode
+                packageLabel.textContent = "Upgrade Package:";
+                generateBtn.textContent = "Generate Congrats Message";
+            } else {
+                // Switch back to Registration Mode
+                packageLabel.textContent = "Registration Package:";
+                generateBtn.textContent = "Generate Welcome Message";
+            }
+        });
+    };
+
+    // The specific logic for our Welcome/Upgrade Message Generator
     const generateWelcomeMessage = (formJson) => {
-        // 1. Get values from the form fields
+        // 1. Get the input elements
+        const messageTypeInput = document.getElementById('messageType');
         const nameInput = document.getElementById('newMemberName');
         const usernameInput = document.getElementById('newMemberUsername');
         const packageSelect = document.getElementById('packageType');
         const resultTextarea = document.getElementById(formJson.result.id);
         const resultWrapper = resultTextarea.parentElement;
-        const generateBtn = document.getElementById(formJson.button.id); // Get the button itself
+        const generateBtn = document.getElementById(formJson.button.id);
 
-        // Get the values and immediately trim any leading/trailing whitespace
+        // Get values and trim whitespace
+        const messageType = messageTypeInput.value;
         const trimmedName = nameInput.value.trim();
         const trimmedUsername = usernameInput.value.trim();
 
@@ -464,32 +494,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // --- START: New visual feedback for the button ---
+        // Button Feedback
         const originalButtonText = generateBtn.innerHTML;
         generateBtn.innerHTML = '<i class="fas fa-check"></i> Generated!';
         generateBtn.classList.add('generated');
-        // --- END: New visual feedback for the button ---
 
-        // 2. Get the full text of the selected package
-        const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
+        // Process values
         const name = toTitleCase(trimmedName);
         const username = trimmedUsername;
+        const selectedPackageText = packageSelect.options[packageSelect.selectedIndex].text;
 
-        // 3. Construct the customized playbook link
-        const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;
+        let message = "";
 
-        // 4. Assemble the final message
-        const message = `🎉🎉🎉 *BOOM‼️ BOOM‼️ BOOM‼️* 🎉🎉🎉
+        if (messageType === 'upgrade') {
+            // --- UPGRADE TEMPLATE ---
+            // We convert package text to Uppercase for the upgrade message style
+            const upperPackageText = selectedPackageText.toUpperCase();
 
-My dear *TGR FAMILY*, please help me give a *GRAND WELCOME* to our newest superstar 🌟  
+            message = `🎉🎉🎉 BOOM‼️ BOOM‼️ BOOM‼️ 🎉🎉🎉
+
+My dear TGR FAMILY, please join me in CONGRATULATING one of our shining stars 🌟
+
+👨‍🚀 ${name}
+🔑 Username: ${username} 🚀
+
+…on the successful UPGRADE from a previous package to the prestigious
+${upperPackageText}
+
+🎊🎊 This upgrade means more levels, more leverage, and more earning power!
+Welcome to a DEEPER OIL WELL in the TELECOMS SECTOR 🛢️📲💰
+
+May this bold move unlock MASSIVE COMMISSIONS, LEADERSHIP BONUSES, and NEXT-LEVEL SUCCESS! 💸🔥🚀
+
+💃🏽🕺🏽💰📞📲🛢️💎🥳`;
+
+        } else {
+            // --- REGISTRATION TEMPLATE (Original) ---
+            const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;
+
+            message = `🎉🎉🎉 *BOOM‼️BOOM BOOM* 🎉🎉🎉
+
+My dear TGR family, please help me give a grand welcome to our newest superstar 🌟  
 
 👨‍🚀 *${name}*  
-🔑 *Username: ${username}* 🚀  
+🔑 *Username:* *${username}* 🚀  
 
-...who just joined *TGR* with the *${selectedPackageText}* 
+...who just joined *TGR* with the ${selectedPackageText}  
 
-🎊🎊 *You're officially WELCOME to your* 🛢️ *TELECOMS SECTOR OIL WELL* 🛢️📲💰  
-May this journey bring you *MASSIVE EARNINGS* and *UNSTOPPABLE SUCCESS*! 💸🔥
+🎊🎊 You're officially WELCOME to your *Telecoms Sector Oil Well* 🛢️📲💰  
+May this journey bring you *massive earnings* and *unstoppable success*! 💸🔥
 
 💃🏽🕺🏽💰📞📲🛢️💎🥳
 
@@ -500,23 +553,21 @@ May this journey bring you *MASSIVE EARNINGS* and *UNSTOPPABLE SUCCESS*! 💸�
 🔗 ${playbookLink} ✅  
 
 _Everything you need — guides, videos, and tools — all in one place!_ 💡📲`;
+        }
 
-        // 5. Display the message
+        // Display the message
         resultTextarea.value = message;
         resultWrapper.style.display = 'block';
 
-        // --- START: CRITICAL FIX - Recalculate accordion height to show result immediately ---
-        // This forces the accordion to resize to fit the new content
+        // Recalculate accordion height
         const accordionContent = resultWrapper.closest('.accordion-content');
         if (accordionContent) {
-            // First, set height to auto to find the new full height, then set it back to that height
             resultTextarea.style.height = 'auto';
             resultTextarea.style.height = (resultTextarea.scrollHeight) + 'px';
             accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
         }
-        // --- END: CRITICAL FIX ---
 
-        // 6. Create and add a "Copy" button if it doesn't exist
+        // Setup Copy Button
         if (!resultWrapper.querySelector('.copy-generated-text-btn')) {
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-generated-text-btn';
@@ -533,13 +584,12 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
             });
         }
 
-        // Reset the generate button after 2 seconds
+        // Reset button
         setTimeout(() => {
             generateBtn.innerHTML = originalButtonText;
             generateBtn.classList.remove('generated');
         }, 2000);
     };
-    // --- END: Form Generation Logic ---
 
 
     // --- Function 8: Handle deeplinking to a specific guide ---

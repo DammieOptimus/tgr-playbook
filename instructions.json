@@ -83,9 +83,24 @@
         "id": "welcomeMessageGenerator",
         "fields": [
           {
+            "type": "select",
+            "id": "messageType",
+            "label": "Message Type:",
+            "options": [
+              {
+                "value": "registration",
+                "text": "Registration (New Member)"
+              },
+              {
+                "value": "upgrade",
+                "text": "Upgrade (Existing Member)"
+              }
+            ]
+          },
+          {
             "type": "text",
             "id": "newMemberName",
-            "label": "New Member's Full Name:",
+            "label": "Member's Full Name:",
             "placeholder": "e.g., Mr. Buzz Lightyear"
           },
           {

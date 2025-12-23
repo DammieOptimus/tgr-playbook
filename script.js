@@ -475,20 +475,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             // We convert package text to Uppercase for the upgrade message style
             const upperPackageText = selectedPackageText.toUpperCase();
 
-            message = `🎉🎉🎉 BOOM‼️ BOOM‼️ BOOM‼️ 🎉🎉🎉
+            message = `🎉🎉🎉 *BOOM‼️ BOOM‼️ BOOM*‼️ 🎉🎉🎉
 
-My dear TGR FAMILY, please join me in CONGRATULATING one of our shining stars 🌟
+My dear *TGR FAMILY*, please join me in *CONGRATULATING* one of our shining stars 🌟
 
-👨‍🚀 ${name}
-🔑 Username: ${username} 🚀
+👨‍🚀 *${name}*
+🔑 *Username:* *${username}* 🚀
 
-…on the successful UPGRADE from a previous package to the prestigious
-${upperPackageText}
+…on the successful *UPGRADE* from a previous package to the prestigious
+*${upperPackageText}*
 
-🎊🎊 This upgrade means more levels, more leverage, and more earning power!
-Welcome to a DEEPER OIL WELL in the TELECOMS SECTOR 🛢️📲💰
+🎊🎊 This *upgrade* means *more levels*, *more leverage*, and *more earning power*!
+Welcome to a *DEEPER OIL WELL* in the *TELECOMS SECTOR* 🛢️📲💰
 
-May this bold move unlock MASSIVE COMMISSIONS, LEADERSHIP BONUSES, and NEXT-LEVEL SUCCESS! 💸🔥🚀
+May this *bold move* unlock *MASSIVE COMMISSIONS*, *LEADERSHIP BONUSES*, and *NEXT-LEVEL SUCCESS*! 💸🔥🚀
 
 💃🏽🕺🏽💰📞📲🛢️💎🥳`;
 

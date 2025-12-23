@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (refId) {
                 instructions.forEach(item => {
-                    item.content = item.content.replace(/YOUR_REFERRAL_ID/g, refId);
+                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, refId);
                 });
             } else {
                 instructions.forEach(item => {
-                    item.content = item.content.replace(/YOUR_REFERRAL_ID/g, 'TYPE-YOUR-REFERRAL-ID-HERE');
+                    item.content = item.content.replace(/TYPE-YOUR-REFERRAL-ID-HERE/g, 'TYPE-YOUR-REFERRAL-ID-HERE');
                 });
             }
             // --- END: Dynamic Referral ID Replacement ---

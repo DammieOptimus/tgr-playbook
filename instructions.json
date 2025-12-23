@@ -171,6 +171,67 @@
     {
       "title": "How to Contact TGR Customer Support (Open a Ticket)",
       "content": "*A User's Guide to Contacting TGR Support*\n\nThis guide explains how to raise a support ticket if you have a complaint or an issue, such as a problem with funding your wallet.\n\nhttps://youtu.be/NSgZTMGKw3M\nand\nhttps://youtu.be/5x7GDgzxJ6s\n\n---\n\n*PART 1: HOW TO CREATE A SUPPORT TICKET* 📝\n\n*1. Log In to Your Account*\n   - Go to your TGR dashboard.\n\n*2. Navigate to the Support Section*\n   - On the left-hand menu, scroll down to the *SUPPORT TICKET* section.\n   - Tap on *Support* to see more options.\n\n*3. Open a New Ticket*\n   - Tap on *Open Ticket*.\n\n*4. Fill Out the Ticket Form*\n   - *Subject*: Give your issue a clear, short title.\n     _Example: WALLET NOT FUNDED_\n\n   - *Description*: Explain your problem in detail. Include important information like:\n     - The transaction amount (e.g., _N10,000_)\n     - The bank you paid from (e.g., _GTBank_)\n     - The account name used for the payment\n     - The Providus account number you sent the money to\n\n   - *Priority*: Choose the urgency level. For funding issues, select *High*.\n\n   - *Category*: Choose the type of issue. For funding, select *Transaction*.\n\n*5. Submit the Ticket*\n   - After filling in all the details, tap the *Submit* button.\n\n---\n\n*PART 2: HOW TO CHECK FOR REPLIES* 📬\n\n_*Important: Do not create a new ticket for the same issue. Always check for a reply on the original ticket first.*_\n\n*1. Go to \"My Tickets\"*\n   - Go back to the *Support* section in the main menu.\n   - Tap on *My Tickets*.\n\n*2. Check the Ticket Status*\n   - You will see a list of all your tickets. Look at the *Status* column.\n   - If it says *\"Admin Reply,\"* the support team has responded to you.\n\n*3. View and Respond to the Reply*\n   - Tap on the ticket's *Subject* to open it.\n   - Read the admin's message.\n   - If you need to add more information, scroll down, type your message in the *Reply* box, and tap the *Reply* button.\n\n---\n\n*PART 3: HOW TO CLOSE A TICKET* ✅\n\nOnce your problem has been solved, you can close the ticket.\n\n*1. Open the Resolved Ticket*\n   - Go to *My Tickets* and tap on the subject of the ticket that has been resolved.\n\n*2. Mark as Complete*\n   - At the top right of the ticket page, tap the green *Mark as Complete* button. This will close the ticket.\n\nThat's it! This is the official way to communicate with the TGR support team for any issues."
+    },
+    {
+      "title": "Calculator: 'Fantastic 10' Growth Projection",
+      "content": "Use this calculator to project potential earnings based on the power of duplication. \n\nSelect a package, enter how many people each person brings (Duplication Factor), and how many levels deep you want to calculate.",
+      "form": {
+        "id": "fantasticCalcForm",
+        "fields": [
+          {
+            "type": "select",
+            "id": "calcPackage",
+            "label": "Select Package:",
+            "options": [
+              {
+                "value": "coral",
+                "text": "🐠 Coral (₦10,000)"
+              },
+              {
+                "value": "emerald",
+                "text": "🟢 Emerald (₦20,000)"
+              },
+              {
+                "value": "sapphire",
+                "text": "🔵 Sapphire (₦30,000)"
+              },
+              {
+                "value": "ruby",
+                "text": "🔴 Ruby (₦40,000)"
+              },
+              {
+                "value": "diamond",
+                "text": "💍 Diamond (₦50,000)"
+              },
+              {
+                "value": "exec_diamond",
+                "text": "💎 Exec. Diamond (₦100,000)"
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "id": "duplicationFactor",
+            "label": "Duplication Power (Width):",
+            "placeholder": "Default is 10 (e.g. 10 who bring 10)"
+          },
+          {
+            "type": "number",
+            "id": "calculationDepth",
+            "label": "Number of Levels/Weeks (Max 10):",
+            "placeholder": "Default is 5"
+          }
+        ],
+        "button": {
+          "text": "Calculate Projections",
+          "id": "calcFantasticBtn"
+        },
+        "result": {
+          "type": "textarea",
+          "id": "fantasticResult"
+        },
+        "calculation_logic": "calculateFantasticEarnings"
+      }
     }
   ]
 }

@@ -2,9 +2,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import { getFirestore, doc, updateDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-
 // Wait until the entire HTML page is loaded before running our script
 document.addEventListener('DOMContentLoaded', async () => {
+
     // --- FIREBASE CONFIGURATION ---
     // REPLACE THE VALUES BELOW WITH YOUR EXACT FIREBASE CONFIG
     const firebaseConfig = {
@@ -402,6 +402,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             switch (formJson.calculation_logic) {
                 case 'generateWelcomeMessage':
                     generateWelcomeMessage(formJson);
+                    break;
+                case 'calculateFantasticEarnings':
+                    calculateFantasticEarnings(formJson);
                     break;
                 // Add other 'case' statements here for future forms
             }
@@ -869,6 +872,210 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
                 updateFavoritesUI();
             });
         });
+    };
+
+    // --- Function: Fantastic 10 Growth Calculator (With Depth Control) ---
+    const calculateFantasticEarnings = (formJson) => {
+        // 1. Get Inputs
+        const packageSelect = document.getElementById('calcPackage');
+        const duplicationInput = document.getElementById('duplicationFactor');
+        const depthInput = document.getElementById('calculationDepth'); // New Input
+        const resultTextarea = document.getElementById(formJson.result.id);
+        const resultWrapper = resultTextarea.parentElement;
+        const calcBtn = document.getElementById(formJson.button.id);
+
+        // 2. Parse User Values
+        const width = parseInt(duplicationInput.value) || 10; // Default to 10
+        let userDepth = parseInt(depthInput.value) || 5;      // Default to 5
+
+        // Hard limit: Max 10 levels allowed by the system logic
+        if (userDepth > 10) userDepth = 10;
+        if (userDepth < 1) userDepth = 1;
+
+        const pkgKey = packageSelect.value;
+        const pkgName = packageSelect.options[packageSelect.selectedIndex].text;
+
+        // 3. Define Package Data Map
+        const packageData = {
+            coral: { fee: 10000, maxDepth: 6, pv: 20, pvLimit: 1 },
+            emerald: { fee: 20000, maxDepth: 7, pv: 40, pvLimit: 2 },
+            sapphire: { fee: 30000, maxDepth: 8, pv: 60, pvLimit: 3 },
+            ruby: { fee: 40000, maxDepth: 9, pv: 80, pvLimit: 4 },
+            diamond: { fee: 50000, maxDepth: 10, pv: 100, pvLimit: 5 },
+            exec_diamond: { fee: 100000, maxDepth: 10, pv: 200, pvLimit: 5 }
+        };
+
+        const activePkg = packageData[pkgKey];
+
+        // 4. Determine Actual Loop Limit
+        // We stop at the LOWER of: User Request OR Package Limit
+        const actualLoopLimit = Math.min(userDepth, activePkg.maxDepth);
+
+        // 5. Define Commission Percentage Helper
+        const getLevelPercent = (level) => {
+            if (level === 1) return 0.22;
+            if (level === 2) return 0.05;
+            if (level === 3) return 0.05;
+            if (level === 4) return 0.025;
+            return 0.015; // Levels 5 to 10
+        };
+
+        // 6. Perform Calculation
+        let outputLines = [];
+        let totalCash = 0;
+        let totalPV = 0;
+        let totalTeam = 0;
+
+        outputLines.push(`*🚀 TGR 'FANTASTIC ${width}' EARNINGS POTENTIAL 🚀*`);
+        outputLines.push(`Based on the ${pkgName} Plan`);
+        outputLines.push(`Projection for ${actualLoopLimit} Levels/Weeks\n`);
+
+        for (let level = 1; level <= actualLoopLimit; level++) {
+
+            // A: Team Size (Width ^ Level)
+            const teamSize = Math.pow(width, level);
+
+            // B: Level Cash Earnings
+            // Formula: (Fee * Level%) * 0.95 (Maintenance Fee)
+            const grossComm = activePkg.fee * getLevelPercent(level);
+            const netComm = grossComm * 0.95;
+            const levelCash = teamSize * netComm;
+
+            // C: Level PV
+            // Logic: Only earn PV if Level <= PV Depth Limit
+            let levelPV = 0;
+            if (level <= activePkg.pvLimit) {
+                levelPV = teamSize * activePkg.pv;
+            }
+
+            // Aggregate Totals
+            totalTeam += teamSize;
+            totalCash += levelCash;
+            totalPV += levelPV;
+
+            // Format Currency
+            const formattedCash = levelCash.toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+
+            outputLines.push(`Week ${level} -> Level ${level}: ${formattedCash}`);
+        }
+
+        // 7. Final Summaries
+        const formattedTotalCash = totalCash.toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+        const formattedTotalPV = totalPV.toLocaleString();
+        const formattedTotalTeam = totalTeam.toLocaleString();
+
+        outputLines.push(`\n*_Total Earnings: ${formattedTotalCash}_* 💥`);
+
+        // We convert the total cash to words and format it nicely
+        const amountInWords = convertNumberToWords(totalCash);
+        outputLines.push(`( ${amountInWords} Naira Only )`);
+
+        outputLines.push(`*_Total Cumulative PV: ${formattedTotalPV} PV_* 🌱`);
+        outputLines.push(`_Total Team Size: ${formattedTotalTeam} partners_`);
+
+        // Add warning if user wanted more levels than package allows
+        if (userDepth > activePkg.maxDepth) {
+            outputLines.push(`\n⚠️ _Note: Calculation stopped at Level ${activePkg.maxDepth} because that is the limit for the Coral package._`);
+        }
+
+        outputLines.push(`\n_Note: Calculations include the 5% maintenance fee._`);
+
+        // 8. Display Result
+        const finalMessage = outputLines.join('\n');
+        resultTextarea.value = finalMessage;
+        resultWrapper.style.display = 'block';
+
+        // Button Feedback
+        const originalButtonText = calcBtn.innerHTML;
+        calcBtn.innerHTML = '<i class="fas fa-check"></i> Calculated!';
+        calcBtn.classList.add('generated');
+
+        // Resize Accordion & Textarea
+        const accordionContent = resultWrapper.closest('.accordion-content');
+        if (accordionContent) {
+            resultTextarea.style.height = 'auto';
+            resultTextarea.style.height = (resultTextarea.scrollHeight) + 'px';
+            accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
+        }
+
+        // Add Copy Button
+        if (!resultWrapper.querySelector('.copy-generated-text-btn')) {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-generated-text-btn';
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Projection';
+            resultWrapper.appendChild(copyBtn);
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(finalMessage).then(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Projection';
+                    }, 2000);
+                });
+            });
+        }
+
+        // Reset Calc Button
+        setTimeout(() => {
+            calcBtn.innerHTML = originalButtonText;
+            calcBtn.classList.remove('generated');
+        }, 2000);
+    };
+
+    // --- Helper Function: Convert Number to Words (Up to Trillions) ---
+    const convertNumberToWords = (amount) => {
+        const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        const scales = ['', 'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion'];
+
+        // Handle zero or invalid numbers
+        if (amount === 0) return 'Zero';
+
+        // We only convert the whole number part (ignore kobo for words)
+        let number = Math.floor(amount);
+        let words = '';
+        let scaleIndex = 0;
+
+        // Process the number in chunks of 3 digits (1,234,567)
+        while (number > 0) {
+            let chunk = number % 1000;
+
+            if (chunk > 0) {
+                let chunkStr = '';
+                let hundreds = Math.floor(chunk / 100);
+                let remainder = chunk % 100;
+
+                // Handle Hundreds
+                if (hundreds > 0) {
+                    chunkStr += units[hundreds] + ' Hundred';
+                    if (remainder > 0) chunkStr += ' and ';
+                }
+
+                // Handle Tens and Units
+                if (remainder > 0) {
+                    if (remainder < 20) {
+                        chunkStr += units[remainder];
+                    } else {
+                        let tenUnit = Math.floor(remainder / 10);
+                        let unitUnit = remainder % 10;
+                        chunkStr += tens[tenUnit];
+                        if (unitUnit > 0) chunkStr += '-' + units[unitUnit];
+                    }
+                }
+
+                // Add the Scale (Thousand, Million, etc.)
+                // The logic: Current Chunk Words + Scale Name + Comma + Previous Words
+                const scaleName = scales[scaleIndex];
+                const separator = (words ? ', ' : ''); // Add comma if there are already words
+
+                words = chunkStr + (scaleName ? ' ' + scaleName : '') + separator + words;
+            }
+
+            number = Math.floor(number / 1000); // Move to the next chunk
+            scaleIndex++;
+        }
+
+        return words;
     };
 
     // --- Initial calls to run the app ---

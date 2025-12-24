@@ -1113,6 +1113,49 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         badge.style.display = 'flex';
     };
 
+    // --- Function 12: Smart Share Tool ---
+    const setupSmartShare = () => {
+        const shareBtn = document.getElementById('smart-share-btn');
+        if (!shareBtn) return;
+
+        shareBtn.addEventListener('click', async () => {
+            // 1. Construct the Share URL (Preserve RefID, remove Name)
+            const currentUrl = new URL(window.location.href);
+
+            // We keep 'refid' if it exists, but we remove 'fullname' 
+            // because User A shouldn't share their name badge to User B.
+            currentUrl.searchParams.delete('fullname');
+
+            // Clean URL string
+            const shareUrl = currentUrl.toString();
+
+            // 2. Define the Share Message
+            const shareTitle = "TGR Playbook";
+            const shareText = "🔥 Master your TGR business! Access all training guides, videos, and tools in one place. Use the TGR Playbook here:\n";
+
+            // 3. Trigger Share
+            if (navigator.share) {
+                // Option A: Mobile Native Share Sheet (The Best Experience)
+                try {
+                    await navigator.share({
+                        title: shareTitle,
+                        text: shareText,
+                        url: shareUrl
+                    });
+                    console.log('Content shared successfully');
+                } catch (error) {
+                    console.log('Error sharing:', error);
+                }
+            } else {
+                // Option B: Desktop Fallback (WhatsApp Web)
+                // We encode the text and URL to make it safe for the browser link
+                const fullMessage = encodeURIComponent(shareText + " " + shareUrl);
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${fullMessage}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        });
+    };
+
     // --- Initial calls to run the app ---
     updateYear();
     await loadInstructions();
@@ -1123,5 +1166,6 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     setupClickTracking();
     setupRealtimeCounter();
     displayUserProfile();
+    setupSmartShare();
 
 });

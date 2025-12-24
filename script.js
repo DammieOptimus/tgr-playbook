@@ -1078,6 +1078,41 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         return words;
     };
 
+    // --- Function: Display User Profile from URL ---
+    const displayUserProfile = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Get params
+        const rawName = urlParams.get('fullname');
+        const refId = urlParams.get('refid');
+
+        // If we don't have at least one of them, don't show the badge
+        if (!rawName && !refId) return;
+
+        const badge = document.getElementById('user-profile-badge');
+        const nameEl = document.getElementById('header-fullname');
+        const userEl = document.getElementById('header-username');
+
+        // Process Name: Replace underscores with spaces & Decode URI components (for safety)
+        if (rawName) {
+            // e.g., "Dammie_Ayodele" -> "Dammie Ayodele"
+            const cleanName = rawName.replace(/_/g, ' ');
+            nameEl.textContent = cleanName;
+        } else {
+            nameEl.textContent = 'Welcome, Partner'; // Fallback
+        }
+
+        // Process Username
+        if (refId) {
+            userEl.textContent = `${refId}`;
+        } else {
+            userEl.style.display = 'none'; // Hide if no username
+        }
+
+        // Reveal the badge
+        badge.style.display = 'flex';
+    };
+
     // --- Initial calls to run the app ---
     updateYear();
     await loadInstructions();
@@ -1087,5 +1122,6 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     handleDeeplinking();
     setupClickTracking();
     setupRealtimeCounter();
+    displayUserProfile();
 
 });

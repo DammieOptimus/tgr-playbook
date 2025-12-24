@@ -35,6 +35,7 @@ body {
     text-align: center;
     box-shadow: 0 4px 15px var(--shadow-color);
     border-bottom: 5px solid var(--accent-color);
+    position: relative;
 }
 
 .app-header h1 {
@@ -648,4 +649,91 @@ body {
 .accordion-header {
     /* We are just tweaking the existing rule slightly to ensure alignment */
     align-items: center;
+}
+
+
+/* --- User Profile Badge Styling (Red & White - Top Right Fixed) --- */
+#user-profile-badge {
+    position: absolute;
+    /* UNIVERSAL POSITIONING: Top Right for ALL screens */
+    top: 1rem;
+    right: 1.5rem;
+    transform: none; /* No vertical centering */
+    
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    /* Dark glass background */
+    background-color: rgba(0, 0, 0, 0.4); 
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    
+    /* Strong shadow */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.profile-icon {
+    font-size: 2.2rem;
+    /* Vibrant Red */
+    color: #FF4D4D; 
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    line-height: 1.2;
+}
+
+#header-fullname {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #ffffff;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+#header-username {
+    font-size: 0.85rem;
+    color: #FF4D4D; 
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    margin-top: 2px;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .app-header {
+        /* Keep the extra top padding on mobile to push the Title down */
+        padding-top: 5rem;
+        padding-bottom: 1.5rem;
+    }
+    
+    #user-profile-badge {
+        /* Mobile Specific adjustments */
+        top: 0.75rem;
+        right: 0.75rem;
+        
+        padding: 0.4rem 1rem;
+        gap: 0.6rem;
+    }
+
+    .profile-icon {
+        font-size: 1.8rem;
+    }
+
+    #header-fullname {
+        font-size: 0.9rem;
+    }
+
+    #header-username {
+        font-size: 0.75rem;
+    }
 }

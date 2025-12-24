@@ -652,13 +652,13 @@ body {
 }
 
 
-/* --- User Profile Badge Styling (Red & White - Top Right Fixed) --- */
+/* --- User Profile Badge Styling (TGR Blue Theme) --- */
 #user-profile-badge {
     position: absolute;
     /* UNIVERSAL POSITIONING: Top Right for ALL screens */
     top: 1rem;
     right: 1.5rem;
-    transform: none; /* No vertical centering */
+    transform: none;
     
     display: flex;
     align-items: center;
@@ -672,14 +672,14 @@ body {
     backdrop-filter: blur(8px);
     z-index: 10;
     
-    /* Strong shadow */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Soft shadow */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
 .profile-icon {
     font-size: 2.2rem;
-    /* Vibrant Red */
-    color: #FF4D4D; 
+    /* TGR Vibrant Blue - Matches the header gradient */
+    color: #0099DD; 
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
 
@@ -702,7 +702,8 @@ body {
 
 #header-username {
     font-size: 0.85rem;
-    color: #FF4D4D; 
+    /* Matching TGR Vibrant Blue */
+    color: #0099DD; 
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     margin-top: 2px;
@@ -711,7 +712,6 @@ body {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
     .app-header {
-        /* Keep the extra top padding on mobile to push the Title down */
         padding-top: 5rem;
         padding-bottom: 1.5rem;
     }

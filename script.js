@@ -1169,3 +1169,17 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     setupSmartShare();
 
 });
+
+
+// --- PWA Service Worker Registration ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+    });
+}

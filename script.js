@@ -497,7 +497,12 @@ May this *bold move* unlock *MASSIVE COMMISSIONS*, *LEADERSHIP BONUSES*, and *NE
 
         } else {
             // --- REGISTRATION TEMPLATE (Original) ---
-            const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?refid=${username}`;
+
+            // NEW: Create URL-safe name (replace spaces with underscores)
+            const urlSafeName = name.replace(/\s+/g, '_');
+
+            // UPDATED: Link now includes fullname and refid
+            const playbookLink = `https://dammieoptimus.github.io/tgr-playbook/?fullname=${urlSafeName}&refid=${username}`;
 
             message = `🎉🎉🎉 *BOOM‼️BOOM BOOM* 🎉🎉🎉
 
@@ -928,7 +933,7 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
 
         outputLines.push(`*🚀 TGR 'FANTASTIC ${width}' EARNINGS POTENTIAL 🚀*`);
         outputLines.push(`Based on the ${pkgName} Plan`);
-        outputLines.push(`Projection for ${actualLoopLimit} Levels/Weeks\n`);
+        outputLines.push(`Projection for ${actualLoopLimit} Levels in ${actualLoopLimit} Weeks or ${actualLoopLimit} Months\n`);
 
         for (let level = 1; level <= actualLoopLimit; level++) {
 

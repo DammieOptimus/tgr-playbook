@@ -712,8 +712,15 @@ body {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
     .app-header {
-        padding-top: 5rem;
+        /* Default: Normal spacing (no badge) */
+        padding-top: 2rem; 
         padding-bottom: 1.5rem;
+        transition: padding-top 0.3s ease; /* Smooth transition */
+    }
+
+    /* Only applied when JS adds this class */
+    .app-header.has-badge {
+        padding-top: 5rem; /* Make room for the badge */
     }
     
     #user-profile-badge {

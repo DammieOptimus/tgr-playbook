@@ -1116,6 +1116,9 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
 
         // Reveal the badge
         badge.style.display = 'flex';
+
+        // Tell the header to make room for the badge (adds the CSS padding)
+        document.querySelector('.app-header').classList.add('has-badge');
     };
 
     // --- Function 12: Smart Share Tool ---

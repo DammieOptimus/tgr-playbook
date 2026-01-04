@@ -564,37 +564,51 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
     };
 
 
-    // --- Function 8: Handle deeplinking to a specific guide ---
+    // --- Function 8: Handle deeplinking to a specific guide (Index OR Topic) ---
     const handleDeeplinking = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const guideNumber = urlParams.get('guide');
+        const guideTopic = urlParams.get('topic'); // NEW: Support text search
 
-        // If no 'guide' parameter is found, do nothing.
-        if (!guideNumber) {
-            return;
+        let targetGuide = null;
+
+        // Strategy 1: Look for a specific number (Legacy support)
+        if (guideNumber) {
+            targetGuide = document.querySelector(`[data-guide-index="${guideNumber}"]`);
+        }
+        // Strategy 2: Look for a topic string (Robust support)
+        else if (guideTopic) {
+            // Convert "how_to_register" or "how-to-register" -> "how to register"
+            const searchTerm = guideTopic.replace(/[_-]/g, ' ').toLowerCase();
+
+            // Loop through all guides to find a matching title
+            const allGuides = document.querySelectorAll('.accordion-item');
+            for (const guide of allGuides) {
+                const title = guide.querySelector('h2').textContent.toLowerCase();
+                // Check if the title contains the search term
+                if (title.includes(searchTerm)) {
+                    targetGuide = guide;
+                    break; // Stop at the first match
+                }
+            }
         }
 
-        // Find the target accordion item using the data attribute we added
-        const targetGuide = document.querySelector(`[data-guide-index="${guideNumber}"]`);
-
+        // If we found a target (via either method), activate it
         if (targetGuide) {
-            // Use a short delay to ensure all content is rendered before scrolling
             setTimeout(() => {
-                // Programmatically click the header to open the accordion
-                targetGuide.querySelector('.accordion-header').click();
+                // Check if it's already open (to avoid double toggling)
+                if (!targetGuide.classList.contains('active')) {
+                    targetGuide.querySelector('.accordion-header').click();
+                }
 
-                // Add a temporary highlight class
                 targetGuide.classList.add('deeplink-highlight');
-
-                // Scroll the element into view smoothly
                 targetGuide.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-                // Remove the highlight class after a few seconds
                 setTimeout(() => {
                     targetGuide.classList.remove('deeplink-highlight');
-                }, 2500); // Highlight lasts for 2.5 seconds
+                }, 2500);
 
-            }, 200); // 200ms delay
+            }, 200);
         }
     };
 
@@ -1098,10 +1112,10 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         const nameEl = document.getElementById('header-fullname');
         const userEl = document.getElementById('header-username');
 
-        // Process Name: Replace underscores with spaces & Decode URI components (for safety)
+        // Process Name: Replace underscores or dashes with spaces & Decode URI components (for safety)
         if (rawName) {
-            // e.g., "Dammie_Ayodele" -> "Dammie Ayodele"
-            const cleanName = rawName.replace(/_/g, ' ');
+            // e.g., "Dammie_Ayodele" or "Dammie-Ayodele" -> "Dammie Ayodele"
+            const cleanName = rawName.replace(/[-_]/g, ' ');
             nameEl.textContent = cleanName;
         } else {
             nameEl.textContent = 'Welcome, Partner'; // Fallback

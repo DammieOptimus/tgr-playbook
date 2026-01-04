@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tgr-playbook-v3';
+const CACHE_NAME = 'tgr-playbook-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

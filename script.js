@@ -1135,21 +1135,34 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         document.querySelector('.app-header').classList.add('has-badge');
     };
 
-    // --- Function 12: Smart Share Tool ---
+
+    // --- Function 12: Smart Share Tool (Conditional) ---
     const setupSmartShare = () => {
         const shareBtn = document.getElementById('smart-share-btn');
         if (!shareBtn) return;
 
+        // Check if RefID exists in the URL
+        const currentUrl = new URL(window.location.href);
+        const refId = currentUrl.searchParams.get('refid');
+
+        // IF NO REFID: Stop here. The button remains hidden (display: none) from CSS.
+        if (!refId) {
+            return;
+        }
+
+        // IF REFID EXISTS: Show the button (using Flex to keep icon centered)
+        shareBtn.style.display = 'flex';
+
         shareBtn.addEventListener('click', async () => {
             // 1. Construct the Share URL (Preserve RefID, remove Name)
-            const currentUrl = new URL(window.location.href);
+            // We clone the URL so we don't modify the actual browser address bar
+            const shareUrlObj = new URL(window.location.href);
 
-            // We keep 'refid' if it exists, but we remove 'fullname' 
-            // because User A shouldn't share their name badge to User B.
-            currentUrl.searchParams.delete('fullname');
+            // Remove fullname so User A doesn't pass their name badge to User B
+            shareUrlObj.searchParams.delete('fullname');
 
             // Clean URL string
-            const shareUrl = currentUrl.toString();
+            const shareUrl = shareUrlObj.toString();
 
             // 2. Define the Share Message
             const shareTitle = "TGR Playbook";
@@ -1157,7 +1170,7 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
 
             // 3. Trigger Share
             if (navigator.share) {
-                // Option A: Mobile Native Share Sheet (The Best Experience)
+                // Option A: Mobile Native Share Sheet
                 try {
                     await navigator.share({
                         title: shareTitle,
@@ -1170,7 +1183,6 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
                 }
             } else {
                 // Option B: Desktop Fallback (WhatsApp Web)
-                // We encode the text and URL to make it safe for the browser link
                 const fullMessage = encodeURIComponent(shareText + " " + shareUrl);
                 const whatsappUrl = `https://api.whatsapp.com/send?text=${fullMessage}`;
                 window.open(whatsappUrl, '_blank');

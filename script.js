@@ -893,12 +893,12 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         });
     };
 
-    // --- Function: Fantastic 10 Growth Calculator (With Depth Control) ---
+    // --- Function: Fantastic 10 Growth Calculator (Complete Version) ---
     const calculateFantasticEarnings = (formJson) => {
         // 1. Get Inputs
         const packageSelect = document.getElementById('calcPackage');
         const duplicationInput = document.getElementById('duplicationFactor');
-        const depthInput = document.getElementById('calculationDepth'); // New Input
+        const depthInput = document.getElementById('calculationDepth');
         const resultTextarea = document.getElementById(formJson.result.id);
         const resultWrapper = resultTextarea.parentElement;
         const calcBtn = document.getElementById(formJson.button.id);
@@ -927,7 +927,6 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         const activePkg = packageData[pkgKey];
 
         // 4. Determine Actual Loop Limit
-        // We stop at the LOWER of: User Request OR Package Limit
         const actualLoopLimit = Math.min(userDepth, activePkg.maxDepth);
 
         // 5. Define Commission Percentage Helper
@@ -950,18 +949,15 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         outputLines.push(`Projection for ${actualLoopLimit} Levels in ${actualLoopLimit} Weeks or ${actualLoopLimit} Months\n`);
 
         for (let level = 1; level <= actualLoopLimit; level++) {
-
             // A: Team Size (Width ^ Level)
             const teamSize = Math.pow(width, level);
 
-            // B: Level Cash Earnings
-            // Formula: (Fee * Level%) * 0.95 (Maintenance Fee)
+            // B: Level Cash Earnings (Fee * Level% * 0.95 Maintenance Fee)
             const grossComm = activePkg.fee * getLevelPercent(level);
             const netComm = grossComm * 0.95;
             const levelCash = teamSize * netComm;
 
-            // C: Level PV
-            // Logic: Only earn PV if Level <= PV Depth Limit
+            // C: Level PV (Only earn PV if Level <= PV Depth Limit)
             let levelPV = 0;
             if (level <= activePkg.pvLimit) {
                 levelPV = teamSize * activePkg.pv;
@@ -985,16 +981,56 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
 
         outputLines.push(`\n*_Total Earnings: ${formattedTotalCash}_* 💥`);
 
-        // We convert the total cash to words and format it nicely
+        // Add Amount in Words
         const amountInWords = convertNumberToWords(totalCash);
         outputLines.push(`( ${amountInWords} Naira Only )`);
 
         outputLines.push(`*_Total Cumulative PV: ${formattedTotalPV} PV_* 🌱`);
         outputLines.push(`_Total Team Size: ${formattedTotalTeam} partners_`);
 
-        // Add warning if user wanted more levels than package allows
+        // --- NEW: Leadership Incentives Logic ---
+        const incentives = [
+            { pv: 25000, name: "International Trip Fund ✈️", value: "₦750,000", rawVal: 750000 },
+            { pv: 100000, name: "First Car Fund 🚘", value: "₦5,000,000", rawVal: 5000000 },
+            { pv: 250000, name: "Second Car Fund (Jeep) 🚙", value: "₦6,000,000", rawVal: 6000000 },
+            { pv: 500000, name: "House Fund 🏠", value: "₦10,000,000", rawVal: 10000000 }
+        ];
+
+        // Find qualified incentives
+        const qualifiedIncentives = incentives.filter(award => totalPV >= award.pv);
+
+        if (qualifiedIncentives.length > 0) {
+            outputLines.push(`\n🏆 *QUALIFIED INCENTIVES:*`);
+
+            let totalIncentiveCash = 0;
+
+            qualifiedIncentives.forEach(award => {
+                outputLines.push(`✅ ${award.name} (${award.value})`);
+                totalIncentiveCash += award.rawVal;
+            });
+
+            // --- NEW SUBTOTAL SECTION START ---
+            const formattedIncentiveTotal = totalIncentiveCash.toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+            const incentiveWords = convertNumberToWords(totalIncentiveCash);
+
+            outputLines.push(`\n➕ *Total Incentives Value: ${formattedIncentiveTotal}*`);
+            outputLines.push(`( ${incentiveWords} Naira Only )`);
+            // --- NEW SUBTOTAL SECTION END ---
+
+            // Calculate Grand Total (Cash + Awards)
+            const grandTotal = totalCash + totalIncentiveCash;
+            const formattedGrandTotal = grandTotal.toLocaleString('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+            const grandTotalWords = convertNumberToWords(grandTotal);
+
+            outputLines.push(`\n💰 *GRAND TOTAL VALUE (Cash + Awards):*`);
+            outputLines.push(`*${formattedGrandTotal}*`);
+            outputLines.push(`( ${grandTotalWords} Naira Only )`);
+        }
+        // ----------------------------------------
+
+        // Warning if user wanted more levels than package allows
         if (userDepth > activePkg.maxDepth) {
-            outputLines.push(`\n⚠️ _Note: Calculation stopped at Level ${activePkg.maxDepth} because that is the limit for the Coral package._`);
+            outputLines.push(`\n⚠️ _Note: Calculation stopped at Level ${activePkg.maxDepth} because that is the limit for this package._`);
         }
 
         outputLines.push(`\n_Note: Calculations include the 5% maintenance fee._`);
@@ -1009,7 +1045,7 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
         calcBtn.innerHTML = '<i class="fas fa-check"></i> Calculated!';
         calcBtn.classList.add('generated');
 
-        // Resize Accordion & Textarea
+        // Resize Accordion
         const accordionContent = resultWrapper.closest('.accordion-content');
         if (accordionContent) {
             resultTextarea.style.height = 'auto';

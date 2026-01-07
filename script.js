@@ -68,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Run the new function to set up the scrolling notice
             setupScrollingNotice(data.scrolling_notice);
 
+            // --- NEW: Setup Page Tracking ---
+            setupPageTracking(data.system_settings);
+
             // --- START: Dynamic Referral ID Replacement ---
             const urlParams = new URLSearchParams(window.location.search);
             const refId = urlParams.get('refid');
@@ -1222,6 +1225,49 @@ _Everything you need — guides, videos, and tools — all in one place!_ 💡�
                 const fullMessage = encodeURIComponent(shareText + " " + shareUrl);
                 const whatsappUrl = `https://api.whatsapp.com/send?text=${fullMessage}`;
                 window.open(whatsappUrl, '_blank');
+            }
+        });
+    };
+
+    // --- Function 13: Setup Page Visit Tracking (Toggleable) ---
+    const setupPageTracking = (settings) => {
+        // 1. CHECK THE SWITCH: If settings missing or disabled, STOP immediately.
+        if (!settings || !settings.enable_page_tracking) {
+            console.log('Page tracking is disabled in settings.');
+            return;
+        }
+
+        // 2. INCREMENT (Write)
+        // We use sessionStorage to ensure we only count 1 visit per browser session
+        // (Refresh won't spam the database, but closing/reopening browser will)
+        if (!sessionStorage.getItem('visit_counted')) {
+            const statsRef = doc(db, "app_stats", "general_analytics");
+            updateDoc(statsRef, {
+                page_visits: increment(1)
+            }).catch(err => console.error("Tracking Error:", err));
+
+            // Mark this session as counted
+            sessionStorage.setItem('visit_counted', 'true');
+        }
+
+        // 3. CREATE UI (The Pill)
+        const pill = document.createElement('div');
+        pill.id = 'visit-pill';
+        pill.innerHTML = `
+        <span>Page Visits</span>
+        <strong id="visit-count-display">...</strong>
+    `;
+        document.body.appendChild(pill);
+
+        // 4. LISTEN (Read)
+        const statsRef = doc(db, "app_stats", "general_analytics");
+        onSnapshot(statsRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                const visits = data.page_visits || 0;
+
+                const display = document.getElementById('visit-count-display');
+                if (display) display.textContent = visits.toLocaleString();
             }
         });
     };

@@ -782,3 +782,43 @@ body {
         font-size: 1.1rem;
     }
 }
+
+/* --- Page Visit Tracker Pill --- */
+#visit-pill {
+    position: fixed;
+    /* 25px (bottom) + 50px (share btn height) + 15px (gap) = 90px */
+    bottom: 90px; 
+    left: 25px;
+    
+    background-color: rgba(0, 0, 0, 0.6); /* Darker for visibility */
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    z-index: 999; /* Below the Share button tooltip but above content */
+    
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#visit-pill span {
+    font-size: 0.7rem;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+#visit-pill strong {
+    font-size: 1.1rem;
+    color: var(--highlight-color); /* TGR Light Blue */
+}
+
+/* If on mobile, maybe shift it slightly if needed, but left-aligned is usually safe */
